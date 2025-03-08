@@ -2,9 +2,9 @@
 
 > A computer case kit for Raspberry Pi 5.
 
-<img src='Picture/FNK0100B.png' width='30%'/>
+<img src='Picture/FNK0100B.png' width='100%'/>
 
-<img src='Picture/FNK0100K.png' width='30%'/>
+<img src='Picture/FNK0100K.png' width='100%'/>
 
 ### Download
 
@@ -12,7 +12,7 @@
 
 	Run following command to download all the files in this repository.
 
-	`git clone https://github.com/Freenove/Freenove_Computer_Case_Kit_for_Raspberry_Pi.git
+	git clone https://github.com/Freenove/Freenove_Computer_Case_Kit_for_Raspberry_Pi.git
 
 * **Manually download in browser**
 
