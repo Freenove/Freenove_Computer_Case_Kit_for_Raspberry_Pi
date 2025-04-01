@@ -1,13 +1,13 @@
 ## Freenove_Computer_Case_Kit_for_Raspberry_Pi
 
 > A computer case kit for Raspberry Pi 5.
-* **FNK0100A**
+* FNK0100A
 <img src='Picture/FNK0100A.png' width='100%'/>
-* **FNK0100B**
+* FNK0100B
 <img src='Picture/FNK0100B.png' width='100%'/>
-* **FNK0100H**
+* FNK0100H
 <img src='Picture/FNK0100H.png' width='100%'/>
-* **FNK0100K**
+* FNK0100K
 <img src='Picture/FNK0100K.png' width='100%'/>
 
 ### Download
