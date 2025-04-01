@@ -117,6 +117,7 @@ def main(argv):
             try:
                 expansion_board = Expansion()
                 expansion_board.set_fan_mode(1)
+                expansion_board.set_fan_frequency(50)
                 print("Use Ctrl+C to exit...")
                 while True:
                     for i in range(0, 256):

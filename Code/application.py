@@ -57,7 +57,7 @@ class Pi_Control:
                                         text=True)
                 if result.returncode == 0:
                     pwm_value = int(result.stdout.strip())
-                    if pwm_value > 255:
+                    if pwm_value > 0:
                         pwm_value = 255
                     elif pwm_value < 0:
                         pwm_value = 0
@@ -203,6 +203,11 @@ class Pi_Control:
         try:
             if self.expansion:
                 self.expansion.set_fan_mode(0)
+        except Exception as e:
+            pass
+        try:
+            if self.expansion:
+                self.expansion.set_fan_frequency(50)
         except Exception as e:
             pass
         try:

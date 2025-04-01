@@ -9,16 +9,18 @@ class Expansion:
     REG_LED_ALL = 0x02           # Set all LEDs color
     REG_LED_MODE = 0x03          # Set LED running mode
     REG_FAN_MODE = 0x04          # Set fan running mode
-    REG_FAN_DUTY = 0x05          # Set fan duty cycle
-    REG_FAN_THRESHOLD = 0x06     # Set fan temperature threshold
-    REG_POWER_ON_CHECK = 0x07    # Set power-on check
+    REG_FAN_FREQUENCY = 0x05     # Set fan frequency
+    REG_FAN_DUTY = 0x06          # Set fan duty cycle
+    REG_FAN_THRESHOLD = 0x07     # Set fan temperature threshold
+    REG_POWER_ON_CHECK = 0x08    # Set power-on check
     REG_SAVE_FLASH = 0xff         # Save to flash
 
-    REG_I2C_ADDRESS_READ = 0xf4   # Read I2C address
-    REG_LED_SPECIFIED_READ = 0xf5 # Read specified LED color
-    REG_LED_ALL_READ = 0xf6       # Read all LEDs color
-    REG_LED_MODE_READ = 0xf7      # Read LED mode
-    REG_FAN_MODE_READ = 0xf8      # Read fan mode
+    REG_I2C_ADDRESS_READ = 0xf3   # Read I2C address
+    REG_LED_SPECIFIED_READ = 0xf4 # Read specified LED color
+    REG_LED_ALL_READ = 0xf5       # Read all LEDs color
+    REG_LED_MODE_READ = 0xf6      # Read LED mode
+    REG_FAN_MODE_READ = 0xf7      # Read fan mode
+    REG_FAN_FREQUENCY_READ = 0xf8 # Read fan frequency
     REG_FAN0_DUTY_READ = 0xf9     # Read fan duty cycle 1 value
     REG_FAN1_DUTY_READ = 0xfa     # Read fan duty cycle 2 value
     REG_FAN_THRESHOLD_READ = 0xfb # Read fan temperature threshold
@@ -76,6 +78,16 @@ class Expansion:
         # Set fan running mode
         self.write(self.REG_FAN_MODE, mode)
 
+    def set_fan_frequency(self, freq):
+        # Set fan frequency
+        frequency = [
+            (freq >> 24) & 0xFF,
+            (freq >> 16) & 0xFF,
+            (freq >> 8) & 0xFF,
+            freq & 0xFF
+        ]
+        self.write(self.REG_FAN_FREQUENCY, frequency)
+
     def set_fan_duty(self, duty0, duty1):
         # Set fan duty cycle
         duty = [duty0, duty1]
@@ -115,6 +127,12 @@ class Expansion:
     def get_fan_mode(self):
         # Get fan running mode
         return self.read(self.REG_FAN_MODE_READ)
+
+    def get_fan_frequency(self):
+        # Get fan frequency
+        arr = self.read(self.REG_FAN_FREQUENCY_READ, 4)
+        freq = (arr[0] << 24) | (arr[1] << 16) | (arr[2] << 8) | arr[3];
+        return freq
 
     def get_fan0_duty(self):
         # Get fan duty cycle 1 value
@@ -170,17 +188,17 @@ if __name__ == '__main__':
         expansion_board.set_fan_duty(0, 0)
         expansion_board.set_led_mode(2)
         expansion_board.set_fan_mode(1)
+        expansion_board.set_fan_frequency(50)
+        expansion_board.set_fan_duty(255, 255)
         time.sleep(3)
         while True:
             count += 1
-            if count > 255:
-                count = 0
-            expansion_board.set_fan_duty(count%255, count%255)
             if count % 5 == 0:
                 print("get iic addr: 0x{:02X}".format(expansion_board.get_iic_addr()))
                 print("get all led color:", expansion_board.get_all_led_color())
                 print("get led mode:", expansion_board.get_led_mode())
                 print("get fan mode:", expansion_board.get_fan_mode())
+                print("get fan frequency:", expansion_board.get_fan_frequency())
                 print("get fan0 duty:", expansion_board.get_fan0_duty())
                 print("get fan1 duty:", expansion_board.get_fan1_duty())
                 print("get fan threshold:", expansion_board.get_fan_threshold())

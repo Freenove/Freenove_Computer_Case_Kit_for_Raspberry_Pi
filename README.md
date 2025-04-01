@@ -2,7 +2,11 @@
 
 > A computer case kit for Raspberry Pi 5.
 
+<img src='Picture/FNK0100A.png' width='100%'/>
+
 <img src='Picture/FNK0100B.png' width='100%'/>
+
+<img src='Picture/FNK0100H.png' width='100%'/>
 
 <img src='Picture/FNK0100K.png' width='100%'/>
 
