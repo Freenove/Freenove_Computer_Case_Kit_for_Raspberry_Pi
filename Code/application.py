@@ -57,7 +57,7 @@ class Pi_Control:
                                         text=True)
                 if result.returncode == 0:
                     pwm_value = int(result.stdout.strip())
-                    if pwm_value > 0:
+                    if pwm_value > 255:
                         pwm_value = 255
                     elif pwm_value < 0:
                         pwm_value = 0
@@ -267,6 +267,29 @@ class Pi_Control:
                     self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
             time.sleep(0.01)
 
+    def threading_fan_limit(self):
+        # Thread function to limit the fan speed
+        last_fan_pwm = 0
+        last_fan_pwm_limit = 0
+        while not self.stop_event.is_set():
+            with self.data_lock:
+                current_cpu_temp = self.get_raspberry_cpu_temperature()
+                current_fan_pwm = self.get_raspberry_fan_pwm()
+                print(f"CPU TEMP: {current_cpu_temp}C")
+                print(f"FAN PWM: {current_fan_pwm}")
+                if current_fan_pwm != -1:
+                    if last_fan_pwm_limit == 0:
+                        if current_fan_pwm > 170:
+                            last_fan_pwm = 255
+                            self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
+                            last_fan_pwm_limit = 1
+                    elif last_fan_pwm_limit == 1:
+                        if current_fan_pwm < 130:
+                            last_fan_pwm = 0
+                            self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
+                            last_fan_pwm_limit = 0
+
+
 if __name__ == "__main__":
     pi_control = None
     oled_thread = None
@@ -277,7 +300,7 @@ if __name__ == "__main__":
 
         pi_control = Pi_Control()
         oled_thread = threading.Thread(target=pi_control.threading_oled, name="OLED_Thread")
-        fan_thread = threading.Thread(target=pi_control.threading_fan, name="Fan_Thread")
+        fan_thread = threading.Thread(target=pi_control.threading_fan_limit, name="Fan_Thread")
 
         oled_thread.start()
         fan_thread.start()
