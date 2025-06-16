@@ -1,5 +1,11 @@
 
 # Thanks to @ricardodemauro for the code modifications.
+## This is a rewrite of the application.py with:
+## native method instead of syscall
+## no threading (less cpu usage)
+## ached the cooling_fan path
+## some python optimizations
+## It uses less memory and less cpu time
 
 import os
 import sys
