@@ -207,7 +207,6 @@ if __name__ == '__main__':
         
         count = 0
         expansion_board.set_all_led_color(0, 0, 255)
-        expansion_board.set_fan_duty(0, 0)
         expansion_board.set_led_mode(2)
         expansion_board.set_fan_mode(1)
         expansion_board.set_fan_frequency(50000)
