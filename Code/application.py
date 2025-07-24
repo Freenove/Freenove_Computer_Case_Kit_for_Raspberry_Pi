@@ -188,6 +188,13 @@ class Pi_Monitor:
         except Exception as e:
             return 0
 
+    def get_computer_firmware_version(self):
+        # Get the computer firmware version using Expansion object
+        try:
+            return self.expansion.get_version()
+        except Exception as e:
+            return "Error"
+
     def cleanup(self):
         # Perform cleanup operations
         if self.cleanup_done:
@@ -249,20 +256,24 @@ class Pi_Monitor:
         while not self.stop_event.is_set():
             # Fan control logic (runs every iteration - every 1 second)
             current_cpu_temp = self.get_raspberry_cpu_temperature()
-            current_fan_pwm = self.get_raspberry_fan_pwm()
+            current_pi_pwm = self.get_raspberry_fan_pwm()
+            current_pc_pwm = self.get_computer_fan_duty()
             
             # Use single print statement to reduce I/O
-            print(f"CPU TEMP: {current_cpu_temp}C, FAN PWM: {current_fan_pwm}")
+            print(f"CPU TEMP: {current_cpu_temp}C, Pi PWM: {current_pi_pwm}, PC PWM: {current_pc_pwm}")
             
-            if current_fan_pwm != -1:
-                if last_fan_pwm_limit == 0 and current_fan_pwm > temp_threshold_high:
-                    last_fan_pwm = max_pwm
-                    self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
-                    last_fan_pwm_limit = 1
-                elif last_fan_pwm_limit == 1 and current_fan_pwm < temp_threshold_low:
-                    last_fan_pwm = min_pwm
-                    self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
-                    last_fan_pwm_limit = 0
+            if current_pi_pwm != -1:
+                if "V1.1"  in self.get_computer_firmware_version():
+                    self.expansion.set_fan_duty(current_pi_pwm, current_pi_pwm)
+                else:
+                    if last_fan_pwm_limit == 0 and current_pi_pwm > temp_threshold_high:
+                        last_fan_pwm = max_pwm
+                        self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
+                        last_fan_pwm_limit = 1
+                    elif last_fan_pwm_limit == 1 and current_pi_pwm < temp_threshold_low:
+                        last_fan_pwm = min_pwm
+                        self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
+                        last_fan_pwm_limit = 0
             
             # OLED update logic (runs every 3 seconds)
             if oled_counter % 3 == 0:
