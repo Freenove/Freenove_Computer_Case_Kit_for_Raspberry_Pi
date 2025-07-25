@@ -259,10 +259,8 @@ class Pi_Monitor:
             current_pi_pwm = self.get_raspberry_fan_pwm()
             current_pc_pwm = self.get_computer_fan_duty()
             
-            # Use single print statement to reduce I/O
-            print(f"CPU TEMP: {current_cpu_temp}C, Pi PWM: {current_pi_pwm}, PC PWM: {current_pc_pwm}")
-            
             if current_pi_pwm != -1:
+                print(f"CPU TEMP: {current_cpu_temp}C, Pi PWM: {current_pi_pwm}, PC PWM: {current_pc_pwm}")
                 if "V1.1"  in self.get_computer_firmware_version():
                     self.expansion.set_fan_duty(current_pi_pwm, current_pi_pwm)
                 else:
@@ -274,6 +272,16 @@ class Pi_Monitor:
                         last_fan_pwm = min_pwm
                         self.expansion.set_fan_duty(last_fan_pwm, last_fan_pwm)
                         last_fan_pwm_limit = 0
+            else:
+                print(f"CPU TEMP: {current_cpu_temp}C, PC PWM: {current_pc_pwm}")
+                temp = self.get_computer_temperature()
+                if temp < 30:
+                    self.expansion.set_fan_duty(0, 0)
+                elif temp >30 and temp < 45:
+                    duty = int((temp - 30) * 255 / (45 - 30))
+                    self.expansion.set_fan_duty(duty, duty)
+                elif temp > 45:
+                    self.expansion.set_fan_duty(255, 255)
             
             # OLED update logic (runs every 3 seconds)
             if oled_counter % 3 == 0:
