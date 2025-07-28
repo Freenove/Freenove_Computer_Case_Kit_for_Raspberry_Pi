@@ -207,9 +207,9 @@ if __name__ == '__main__':
         expansion_board.set_fan_duty(0, 0)             # Set the fan 1 and fan 2 duty cycle, 0~255
         expansion_board.set_fan_threshold(30, 45)      # Set the temperature threshold, (low temperature, high temperature)
         expansion_board.set_power_on_check(1)          # Set power-on check state, 1: Enable, 0: Disable
-        expansion_board.set_fan_power_switch(1)
         version = expansion_board.get_version()
         if "V1.1" in version:
+            expansion_board.set_fan_power_switch(1)
             expansion_board.set_fan_auto_speed(50,50, 100,100, 175,175) # Set fan auto mode low speed, mid speed, high speed
         expansion_board.set_save_flash(1)              # Save configuration to flash, 1: Enable, 0: Disable
         time.sleep(0.5)
@@ -222,7 +222,8 @@ if __name__ == '__main__':
         expansion_board.set_fan_mode(1)
         expansion_board.set_fan_frequency(50000)
         expansion_board.set_fan_duty(128, 128)
-        expansion_board.set_fan_power_switch(1)
+        if "V1.1" in expansion_board.get_version():
+            expansion_board.set_fan_power_switch(1)
         time.sleep(3)
         while True:
             count += 1
@@ -251,5 +252,6 @@ if __name__ == '__main__':
     finally:
         expansion_board.set_all_led_color(0, 0, 0)
         expansion_board.set_fan_duty(0, 0)
-        expansion_board.set_fan_power_switch(0)
+        if "V1.1" in expansion_board.get_version():
+            expansion_board.set_fan_power_switch(0)
         expansion_board.end()
