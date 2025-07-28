@@ -231,7 +231,7 @@ class Pi_Monitor:
             if self.expansion:
                 self.expansion.set_fan_duty(0, 0)
                 if "V1.1" in self.expansion.get_version():
-                    self.expansion.set_fan_power_switch(1)
+                    self.expansion.set_fan_power_switch(0)
         except Exception as e:
             pass
         try:
