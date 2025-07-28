@@ -59,6 +59,7 @@ class Pi_Monitor:
             self.expansion.set_led_mode(4)
             self.expansion.set_all_led_color(255, 0, 0)
             self.expansion.set_fan_mode(1)
+            self.expansion.set_fan_power_switch(1)
         except Exception as e:
             sys.exit(1)
 
@@ -228,6 +229,7 @@ class Pi_Monitor:
         try:
             if self.expansion:
                 self.expansion.set_fan_duty(0, 0)
+                self.expansion.set_fan_power_switch(0)
         except Exception as e:
             pass
         try:
