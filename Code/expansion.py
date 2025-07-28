@@ -14,22 +14,24 @@ class Expansion:
     REG_FAN_THRESHOLD = 0x07     # Set fan temperature threshold
     REG_POWER_ON_CHECK = 0x08    # Set power-on check
     REG_FAN_AUTO_SPEED = 0x09    # Set fan auto speed value
-    REG_SAVE_FLASH = 0xff        # Save to flash
-
-    REG_FAN_AUTO_SPEED_READ = 0xf1 # Read fan auto speed value
-    REG_FAN_SPEED_READ = 0xf2      # Read fan speed
-    REG_I2C_ADDRESS_READ = 0xf3    # Read I2C address
-    REG_LED_SPECIFIED_READ = 0xf4  # Read specified LED color
-    REG_LED_ALL_READ = 0xf5        # Read all LEDs color
-    REG_LED_MODE_READ = 0xf6       # Read LED mode
-    REG_FAN_MODE_READ = 0xf7       # Read fan mode
-    REG_FAN_FREQUENCY_READ = 0xf8  # Read fan frequency
-    REG_FAN0_DUTY_READ = 0xf9      # Read fan duty cycle 1 value
-    REG_FAN1_DUTY_READ = 0xfa      # Read fan duty cycle 2 value
-    REG_FAN_THRESHOLD_READ = 0xfb  # Read fan temperature threshold
-    REG_TEMP_READ = 0xfc           # Read temperature value
-    REG_BRAND = 0xfd               # Read brand
-    REG_VERSION = 0xfe             # Read version
+    REG_FAN_POWER_SWITCH = 0x0a  # Set fan power switch
+    
+    REG_FAN_POWER_SWITCH_READ = 0xf0 # Read fan power switch
+    REG_FAN_AUTO_SPEED_READ = 0xf1   # Read fan auto speed value
+    REG_FAN_SPEED_READ = 0xf2        # Read fan speed
+    REG_I2C_ADDRESS_READ = 0xf3      # Read I2C address
+    REG_LED_SPECIFIED_READ = 0xf4    # Read specified LED color
+    REG_LED_ALL_READ = 0xf5          # Read all LEDs color
+    REG_LED_MODE_READ = 0xf6         # Read LED mode
+    REG_FAN_MODE_READ = 0xf7         # Read fan mode
+    REG_FAN_FREQUENCY_READ = 0xf8    # Read fan frequency
+    REG_FAN0_DUTY_READ = 0xf9        # Read fan duty cycle 1 value
+    REG_FAN1_DUTY_READ = 0xfa        # Read fan duty cycle 2 value
+    REG_FAN_THRESHOLD_READ = 0xfb    # Read fan temperature threshold
+    REG_TEMP_READ = 0xfc             # Read temperature value
+    REG_BRAND = 0xfd                 # Read brand
+    REG_VERSION = 0xfe               # Read version
+    REG_SAVE_FLASH = 0xff            # Save to flash
 
     def __init__(self, bus_number=1, address=IIC_ADDRESS):
         # Initialize I2C bus and address
@@ -114,6 +116,14 @@ class Expansion:
         speed = [low_speed_0, low_speed_1, mid_speed_0, mid_speed_1, high_speed_0, high_speed_1]
         self.write(self.REG_FAN_AUTO_SPEED, speed)
 
+    def set_fan_power_switch(self, state):
+        # Set fan power switch state
+        self.write(self.REG_FAN_POWER_SWITCH, state)
+
+    def get_fan_power_switch(self):
+        # Get fan power switch state
+        return self.read(self.REG_FAN_POWER_SWITCH_READ)
+        
     def get_fan_auto_speed(self):
         # Get fan auto speed value
         return self.read(self.REG_FAN_AUTO_SPEED_READ, 6)
@@ -197,6 +207,7 @@ if __name__ == '__main__':
         expansion_board.set_fan_duty(0, 0)             # Set the fan 1 and fan 2 duty cycle, 0~255
         expansion_board.set_fan_threshold(30, 45)      # Set the temperature threshold, (low temperature, high temperature)
         expansion_board.set_power_on_check(1)          # Set power-on check state, 1: Enable, 0: Disable
+        expansion_board.set_fan_power_switch(1)
         version = expansion_board.get_version()
         if "V1.1" in version:
             expansion_board.set_fan_auto_speed(50,50, 100,100, 175,175) # Set fan auto mode low speed, mid speed, high speed
@@ -211,6 +222,7 @@ if __name__ == '__main__':
         expansion_board.set_fan_mode(1)
         expansion_board.set_fan_frequency(50000)
         expansion_board.set_fan_duty(128, 128)
+        expansion_board.set_fan_power_switch(1)
         time.sleep(3)
         while True:
             count += 1
@@ -238,4 +250,6 @@ if __name__ == '__main__':
         print("KeyboardInterrupt")
     finally:
         expansion_board.set_all_led_color(0, 0, 0)
+        expansion_board.set_fan_duty(0, 0)
+        expansion_board.set_fan_power_switch(0)
         expansion_board.end()
