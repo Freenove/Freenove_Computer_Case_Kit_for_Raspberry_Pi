@@ -214,4 +214,5 @@ if __name__ == '__main__':
         print("KeyboardInterrupt")
     finally:
         expansion_board.set_all_led_color(0, 0, 0)
+        expansion_board.set_fan_duty(0, 0)
         expansion_board.end()
