@@ -16,15 +16,20 @@ Raspberry Pi models manufactured at different times might not boot up in the sam
 
 There are various ways to burn the Raspberry Pi OS to SSD, each requiring different hardware tools.
 
-+------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
-| Ways | Ways of burning                                                                                                                                                    | Requirements                                                |
-+------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
-| 1    | Use Raspberry Pi to burn the OS. This requires that you can successfully boot up the Raspberry Pi via SD card or U disk. (Recommended, described in this tutorial) | An SD card or a U disk that can access the Raspberry Pi OS. |
-+------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
-| 2    | Purchase an NVMe SSD to USB adapter and flash the image just like you would with an SD card or USB drive.                                                          | NVME SSD to USB adapter (need to be bought separately)      |
-+------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
-| 3    | If there are spare M.2 NVME interface on the motherboard of your PC, you can insert the SSD to it to flash the OS.                                                 | PC with M.2 NVME interface                                  |
-+------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+.. table::
+    :align: center
+    :class: zebra
+    :width: 90%
+
+    +------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+    | Ways | Ways of burning                                                                                                                                                    | Requirements                                                |
+    +------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+    | 1    | Use Raspberry Pi to burn the OS. This requires that you can successfully boot up the Raspberry Pi via SD card or U disk. (Recommended, described in this tutorial) | An SD card or a U disk that can access the Raspberry Pi OS. |
+    +------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+    | 2    | Purchase an NVMe SSD to USB adapter and flash the image just like you would with an SD card or USB drive.                                                          | NVME SSD to USB adapter (need to be bought separately)      |
+    +------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
+    | 3    | If there are spare M.2 NVME interface on the motherboard of your PC, you can insert the SSD to it to flash the OS.                                                 | PC with M.2 NVME interface                                  |
+    +------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------+
 
 .. _Incompatible_SSDs:
 
@@ -43,17 +48,22 @@ Based on the analysis above, our first step should be to install the Raspberry P
 Required Components
 ---------------------------------------
 
-+----------------------+-----------------------------------------------------------------------------------------------+
-| Raspberry Pi 5 x 1   | One 27W power adapter                                                                         |
-|                      |                                                                                               |
-| |Chapter03_00|       | :red:`(or a power adapter compatible with Raspberry Pi official one that can output 5.1V/5A)` |
-|                      |                                                                                               |
-|                      | |Chapter03_01|                                                                                |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| Micro SD Card(TF Card)x1, Card Reader x1                                                                             |
-|                                                                                                                      |
-| |Chapter03_02|                                                                                                       |
-+----------------------------------------------------------------------------------------------------------------------+
+.. table::
+    :align: center
+    :class: table-line
+    :width: 90%
+
+    +----------------------+-----------------------------------------------------------------------------------------------+
+    | Raspberry Pi 5 x 1   | One 27W power adapter                                                                         |
+    |                      |                                                                                               |
+    | |Chapter03_00|       | :red:`(or a power adapter compatible with Raspberry Pi official one that can output 5.1V/5A)` |
+    |                      |                                                                                               |
+    |                      | |Chapter03_01|                                                                                |
+    +----------------------+-----------------------------------------------------------------------------------------------+
+    | Micro SD Card(TF Card)x1, Card Reader x1                                                                             |
+    |                                                                                                                      |
+    | |Chapter03_02|                                                                                                       |
+    +----------------------------------------------------------------------------------------------------------------------+
 
 .. |Chapter03_00| image:: ../_static/imgs/3_Install_Raspberry_Pi_OS/Chapter03_00.png
 .. |Chapter03_01| image:: ../_static/imgs/3_Install_Raspberry_Pi_OS/Chapter03_01.png
@@ -316,25 +326,30 @@ Component List
 Required Components
 ---------------------------
 
-+--------------------------+-----------------------------------------------------------------------------------------------+
-| Raspberry Pi 5 x 1       | 27W power adapter x1                                                                          |
-|                          |                                                                                               |
-| |Chapter03_26|           | :red:`(or a power adapter compatible with Raspberry Pi official one that can output 5.1V/5A)` |
-|                          |                                                                                               |
-|                          | |Chapter03_27|                                                                                |
-+--------------------------+-----------------------------------------------------------------------------------------------+
-| Case Adapter Board x 1   | NVMe SSD x 1 :red:`(Only for FNK0100B and FNK0100K)`                                          |
-|                          |                                                                                               |
-| |Chapter03_28|           | |Chapter03_29|                                                                                |
-+--------------------------+-----------------------------------------------------------------------------------------------+
-| M2.5x3 Screws x 2        | M2.5x5 Brass Standoff x 1                                                                     |
-|                          |                                                                                               |
-| |Chapter03_30|           | |Chapter03_31|                                                                                |
-+--------------------------+-----------------------------------------------------------------------------------------------+
-| FPC soft line-0.5-16P-15cm (same direction) x 1                                                                          |
-|                                                                                                                          |
-| |Chapter03_32|                                                                                                           |
-+--------------------------------------------------------------------------------------------------------------------------+
+.. table::
+    :align: center
+    :class: table-line
+    :width: 90%
+
+    +--------------------------+-----------------------------------------------------------------------------------------------+
+    | Raspberry Pi 5 x 1       | 27W power adapter x1                                                                          |
+    |                          |                                                                                               |
+    | |Chapter03_26|           | :red:`(or a power adapter compatible with Raspberry Pi official one that can output 5.1V/5A)` |
+    |                          |                                                                                               |
+    |                          | |Chapter03_27|                                                                                |
+    +--------------------------+-----------------------------------------------------------------------------------------------+
+    | Case Adapter Board x 1   | NVMe SSD x 1 :red:`(Only for FNK0100B and FNK0100K)`                                          |
+    |                          |                                                                                               |
+    | |Chapter03_28|           | |Chapter03_29|                                                                                |
+    +--------------------------+-----------------------------------------------------------------------------------------------+
+    | M2.5x3 Screws x 2        | M2.5x5 Brass Standoff x 1                                                                     |
+    |                          |                                                                                               |
+    | |Chapter03_30|           | |Chapter03_31|                                                                                |
+    +--------------------------+-----------------------------------------------------------------------------------------------+
+    | FPC soft line-0.5-16P-15cm (same direction) x 1                                                                          |
+    |                                                                                                                          |
+    | |Chapter03_32|                                                                                                           |
+    +--------------------------------------------------------------------------------------------------------------------------+
 
 .. |Chapter03_26| image:: ../_static/imgs/3_Install_Raspberry_Pi_OS/Chapter03_26.png
 .. |Chapter03_27| image:: ../_static/imgs/3_Install_Raspberry_Pi_OS/Chapter03_27.png

@@ -21,25 +21,25 @@ In the RPi 5 design, the traditional 3.5mm audio output interface has been remov
 
     +----------+---------------+--------+---------------+
     | |Chapter1_01|            | Tip    | Left Channel  |
-    +                          +--------+---------------+
+    |                          +--------+---------------+
     |                          | Ring   | Right Channel |
-    +                          +--------+---------------+
+    |                          +--------+---------------+
     |                          | Sleeve | GND           |
     +----------+---------------+--------+---------------+
     | **OMTP** | |Chapter1_02| | Tip    | Left Channel  |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Ring1  | Right Channel |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Ring2  | MIC           |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Sleeve | GND           |
     +----------+---------------+--------+---------------+
     | **CTIA** | |Chapter1_03| | Tip    | Left Channel  |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Ring1  | Right Channel |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Ring2  | GND           |
-    +          +               +--------+---------------+
+    |          |               +--------+---------------+
     |          |               | Sleeve | MIC           |
     +----------+---------------+--------+---------------+
 
@@ -87,11 +87,16 @@ The following table shows the power consumption of the GPIO Board.
 
 At the time of this writing, this product only supports RPi5. The following shows the physical and model figures of an RPi 5.
 
-+-----------------------------------------+----------------------------------+
-| Practicality picture of Raspberry Pi 5: | Model diagram of Raspberry Pi 5: |
-|                                         |                                  |
-| |Chapter01_05|                          | |Chapter01_06|                   |
-+-----------------------------------------+----------------------------------+
+.. table::
+    :align: center
+    :class: table-line
+    :width: 90%
+
+    +-----------------------------------------+----------------------------------+
+    | Practicality picture of Raspberry Pi 5: | Model diagram of Raspberry Pi 5: |
+    |                                         |                                  |
+    | |Chapter01_05|                          | |Chapter01_06|                   |
+    +-----------------------------------------+----------------------------------+
 
 .. |Chapter01_05| image:: ../_static/imgs/1_Main_Components_of_the_Computer_Case/Chapter01_05.png
 .. |Chapter01_06| image:: ../_static/imgs/1_Main_Components_of_the_Computer_Case/Chapter01_06.png
