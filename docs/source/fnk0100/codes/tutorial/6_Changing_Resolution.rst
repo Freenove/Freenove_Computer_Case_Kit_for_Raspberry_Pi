@@ -100,10 +100,14 @@ Run the following command to restart VNC service and restart VNC interface.
 
 Run :guilabel:`sudo raspi-config`, select Advanced Options -> A6 Wayland-> W1 X11-> Enter -> OK.
 
+:combo:`red font-bolder:(Note: The “Audio Config” option order may vary among different versions of Raspberry PI OS.)`
+
 .. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_11.png
     :align: center
 
 Select Advanced Options -> A7 Audio Config -> 1 PulseAudio -> Enter -> OK.
+
+:combo:`red font-bolder:(Note: The “Audio Config” option order may vary among different versions of Raspberry PI OS.)`
 
 .. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_12.png
     :align: center
@@ -111,9 +115,51 @@ Select Advanced Options -> A7 Audio Config -> 1 PulseAudio -> Enter -> OK.
 .. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_13.png
     :align: center
 
-Select Interface Options -> I3 VNC -> Enter -> OK. Reboot your Raspberry Pi and open VNC viewer.
+Open the Terminal on your computer. Run the following command to ssh to your Pi.
 
-.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_14.png
+.. code-block:: console
+    
+    ssh pi@192.168.1.147
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_18.png
+    :align: center
+
+Enter the following command: select Interface Options -> I3 VNC -> Enter -> Yes -> OK, and then open the VNC viewer.
+
+.. code-block:: console
+    
+    sudo raspi-config
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_19.png
+    :align: center
+
+Enabling W1 X11 may cause a gray screen in VNC viewer after restarting. We will need to manually restart the VNC service. Open the VNC interface, click on the menu, and navigate toPreferences -> Control Centre -> Interfaces.
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_20.png
+    :align: center
+
+Click to turn off the VNC service.
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_21.png
+    :align: center
+
+ssh into your Raspberry Pi to enable VNC again via the computer terminal, enter the following command: select Interface Options -> I3 VNC -> Enter -> Yes -> OK, and then open the VNC viewer.
+
+.. code-block:: console
+    
+    sudo raspi-config
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_22.png
+    :align: center
+
+Click to start the VNC service.
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_23.png
+    :align: center
+
+Once you see the VNC icon in the status bar, it indicates that the full version of the VNC service has been successfully installed and is running.
+
+.. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_24.png
     :align: center
 
 6.4 Restart HDMI 

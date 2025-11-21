@@ -2,6 +2,10 @@
 Chapter 2 Assembly 
 ##############################################################################
 
+.. raw:: html
+
+   <iframe style="display: block; margin: 0 auto;" height="421.875" width="750" src="https://www.youtube.com/embed/wyHVcwiXlbg" frameborder="0" allowfullscreen></iframe>
+
 **If you need any help, please feel free to contact us at** support@freenove.com
 
 It is recommended to assemble and use the Freenove Computer Case for Raspberry Pi according to this tutorial. Otherwise, it may lead to incorrect device installation or damage. Please check all the parts again. If there are any incorrect or missing parts in your kit, please contact us in time.

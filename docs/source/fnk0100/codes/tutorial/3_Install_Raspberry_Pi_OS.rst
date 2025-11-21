@@ -2,6 +2,10 @@
 Chapter 3 Install Raspberry Pi OS
 ##############################################################################
 
+.. raw:: html
+
+   <iframe style="display: block; margin: 0 auto;" height="421.875" width="750" src="https://www.youtube.com/embed/jZoEABIeAjE" frameborder="0" allowfullscreen></iframe>
+
 After the assembly is complete, we will start installing the system for the Raspberry Pi. Regardless of whether you want to install the system on the NVMe SSD or not, you need to install the system on an SD card or USB flash drive first.
 
 **Analysis**
