@@ -100,7 +100,7 @@ Run the following command to restart VNC service and restart VNC interface.
 
 Run :guilabel:`sudo raspi-config`, select Advanced Options -> A6 Wayland-> W1 X11-> Enter -> OK.
 
-:combo:`red font-bolder:(Note: The “Audio Config” option order may vary among different versions of Raspberry PI OS.)`
+:combo:`red font-bolder:(Note: The “Wayland” option order may vary among different versions of Raspberry PI OS.)`
 
 .. image:: ../_static/imgs/6_Changing_Resolution/Chapter06_11.png
     :align: center

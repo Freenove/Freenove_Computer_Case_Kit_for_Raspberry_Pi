@@ -12,6 +12,13 @@ It is recommended to assemble and use the Freenove Computer Case for Raspberry P
 
 **Please assemble the product when it is powered off.**
 
+Before installation, try using the cross-head screwdriver inclueded in the kit to pick up the small screws. 
+
+If the magnetic tip of your screwdriver is too weak to pick up the screws, you can magnetize it by gently touching it to the speaker’s magnet for a few moments. （Be careful not to damage the speaker diaphragm.）
+
+.. image:: ../_static/imgs/2_Assembly_/Chapter02_42.png
+    :align: center
+
 Step 1 Installation of Fans and Speakers
 *************************************************
 
@@ -23,38 +30,31 @@ Installing the Speakers
     :class: table-line
     :width: 90%
 
-    +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | When attaching the speakers:                                                                                                                                                                                                           |
-    |                                                                                                                                                                                                                                        |
-    | If there are 20 x M2x4 countersunk head screws and 6 x M2x6 ones available, use M2x4.                                                                                                                                                  |
-    |                                                                                                                                                                                                                                        |
-    | If there are 10 x M2x4 and 14 x M2x6 screws available, use M2x6.                                                                                                                                                                       |
-    |                                                                                                                                                                                                                                        |
-    | **If there is no adhesive pad, you can ignore the Step 1.**                                                                                                                                                                            |
-    |                                                                                                                                                                                                                                        |
-    | |Chapter02_38|                                                                                                                                                                                                                         |
-    |                                                                                                                                                                                                                                        |
-    | Step 1: On the white film, drill four holes aligned with the speaker mounting holes (as shown below) to avoid interference from the speaker rubber pads during installation (:red:`Note: If there is a white film, do not remove it`). |
-    |                                                                                                                                                                                                                                        |
-    | |Chapter02_39|                                                                                                                                                                                                                         |
-    |                                                                                                                                                                                                                                        |
-    | Note: If the speakers come stick to the bottom of the case, please `click here to process <https://github.com/Freenove/Freenove_Computer_Case_Kit_for_Raspberry_Pi/raw/main/Additional%20notes.jpg>`_.                                 |
-    |                                                                                                                                                                                                                                        |
-    | Step 2: Mount the speakers                                                                                                                                                                                                             |
-    |                                                                                                                                                                                                                                        |
-    | Place the acrylic pad for the speaker between the speaker and the case, then secure them with four countersunk screws from the outside of the case.                                                                                    |
-    |                                                                                                                                                                                                                                        |
-    | |Chapter02_40|                                                                                                                                                                                                                         |
-    |                                                                                                                                                                                                                                        |
-    | Installation finished as shown below:                                                                                                                                                                                                  |
-    |                                                                                                                                                                                                                                        |
-    | |Chapter02_41|                                                                                                                                                                                                                         |
-    +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | When attaching the speakers:                                                                                                                                                                                                                                                                                                                                                                                                                |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | If there are 20 x M2x4 countersunk head screws and 6 x M2x6 ones available, use M2x4.                                                                                                                                                                                                                                                                                                                                                       |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | If there are 10 x M2x4 and 14 x M2x6 screws available, use M2x6.                                                                                                                                                                                                                                                                                                                                                                            |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Step 1: Peel off the protective films from both the speaker and the acrylic pad, then align and adhere them together. :red:`(Note: Do not attach the speaker directly to the case, as this may make it difficult to remove later. If the speakers come stick to the bottom of the case, please` `click here to process <https://github.com/Freenove/Freenove_Computer_Case_Kit_for_Raspberry_Pi/raw/main/Additional%20notes.jpg>`_ :red:`.)`|
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | |Chapter02_43|                                                                                                                                                                                                                                                                                                                                                                                                                              |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Step 2: Mount the speakers                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Fix the assembled unit to the case using four screws.                                                                                                                                                                                                                                                                                                                                                                                       |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | |Chapter02_44|                                                                                                                                                                                                                                                                                                                                                                                                                              |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Installation finished as shown below:                                                                                                                                                                                                                                                                                                                                                                                                       |
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | |Chapter02_45|                                                                                                                                                                                                                                                                                                                                                                                                                              |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-.. |Chapter02_38| image:: ../_static/imgs/2_Assembly_/Chapter02_38.png
-.. |Chapter02_39| image:: ../_static/imgs/2_Assembly_/Chapter02_39.png
-.. |Chapter02_40| image:: ../_static/imgs/2_Assembly_/Chapter02_40.png
-.. |Chapter02_41| image:: ../_static/imgs/2_Assembly_/Chapter02_41.png
+.. |Chapter02_43| image:: ../_static/imgs/2_Assembly_/Chapter02_43.png
+.. |Chapter02_44| image:: ../_static/imgs/2_Assembly_/Chapter02_44.png
+.. |Chapter02_45| image:: ../_static/imgs/2_Assembly_/Chapter02_45.png
 
 Installing the Fans
 ==================================
@@ -279,19 +279,19 @@ Installing GPIO Board
     :class: table-line
     :width: 90%
 
-    +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | Connect the two fans on the computer case to the FAN0 and FAN1 interfaces on the GPIO Board respectively.                                                    |
-    |                                                                                                                                                              |
-    | |Chapter02_19|                                                                                                                                               |
-    +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | Install the GPIO Board on the GPIO interface of the Raspberry Pi. Please pay attention to the assembly direction and avoid misalignment during installation. |
-    |                                                                                                                                                              |
-    | |Chapter02_20|                                                                                                                                               |
-    +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | After installation, it should look like the figure below.                                                                                                    |
-    |                                                                                                                                                              |
-    | |Chapter02_21|                                                                                                                                               |
-    +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Connect the two fans on the computer case to the FAN0 and FAN1 interfaces on the GPIO Board respectively.                                                           |
+    |                                                                                                                                                                     |
+    | |Chapter02_19|                                                                                                                                                      |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Install the GPIO Board on the GPIO interface of the Raspberry Pi. :red:`Please pay attention to the assembly direction and avoid misalignment during installation.` |
+    |                                                                                                                                                                     |
+    | |Chapter02_20|                                                                                                                                                      |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | After installation, it should look like the figure below.                                                                                                           |
+    |                                                                                                                                                                     |
+    | |Chapter02_21|                                                                                                                                                      |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. |Chapter02_19| image:: ../_static/imgs/2_Assembly_/Chapter02_19.png
 .. |Chapter02_20| image:: ../_static/imgs/2_Assembly_/Chapter02_20.png

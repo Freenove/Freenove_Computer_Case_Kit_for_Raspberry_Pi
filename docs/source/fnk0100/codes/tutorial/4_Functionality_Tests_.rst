@@ -4,6 +4,10 @@
 Chapter 4 Functionality Tests 
 ##############################################################################
 
+.. raw:: html
+
+   <iframe style="display: block; margin: 0 auto;" height="421.875" width="750" src="https://www.youtube.com/embed/v68T9gNt0eg" frameborder="0" allowfullscreen></iframe>
+
 Before powering on the Freenove Computer Case for Raspberry Pi, please make sure that all cable connections are correct. Due to its multiple functions, this case requires an adequate power supply. We highly recommend using the official Raspberry Pi 5.1V / 5A power adapter (https://www.raspberrypi.com/products/27w-power-supply ). Failure to do so may result in the Freenove Computer Case for Raspberry Pi being unusable or causing damage to components.
 
 4.1 Phenomena of a Successful Boot
