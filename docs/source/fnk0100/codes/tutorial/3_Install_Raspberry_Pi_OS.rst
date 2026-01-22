@@ -526,7 +526,7 @@ At this point, you can mount the disk using the mount command and then access th
 
 .. code-block:: console
     
-    mkdir pi
+    sudo mkdir /media/pi
     sudo mount /dev/nvme0n1p1 /media/pi
 
 .. image:: ../_static/imgs/3_Install_Raspberry_Pi_OS/Chapter03_52.png
