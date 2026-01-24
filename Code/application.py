@@ -21,7 +21,8 @@ from expansion import Expansion
 
 class Pi_Monitor:
     __slots__ = ['oled', 'expansion', 'font_size', 'cleanup_done', 
-                 'stop_event', '_fan_pwm_path', '_format_strings']
+                 'stop_event', '_fan_pwm_path', '_format_strings',
+                 'convert_to_fahrenheit']
 
     def __init__(self):
         # Initialize OLED and Expansion objects
@@ -30,11 +31,13 @@ class Pi_Monitor:
         self.font_size = 12
         self.cleanup_done = False
         self.stop_event = threading.Event()  # Keep for signal handling
+        self.convert_to_fahrenheit = False   # Fahrenheit Celsius Conversion   False: Celsius  True: Fahrenheit
         
         # Cache hwmon path lookup for performance
         self._fan_pwm_path = None
         
         # Pre-allocate format strings
+        temp_unit = "℉" if self.convert_to_fahrenheit else "℃"
         self._format_strings = {
             'cpu': "CPU: {}%",
             'mem': "MEM: {}%", 
@@ -42,8 +45,8 @@ class Pi_Monitor:
             'date': "Date: {}",
             'week': "Week: {}",
             'time': "TIME: {}",
-            'pi_temp': "PI TEMP: {}C",
-            'pc_temp': "PC TEMP: {}C",
+            'pi_temp': f"PI TEMP: {{}}{temp_unit}",
+            'pc_temp': f"PC TEMP: {{}}{temp_unit}",
             'fan_mode': "FAN Mode: {}",
             'fan_duty': "FAN Duty: {}%",
             'led_mode': "LED Mode: {}"
@@ -235,6 +238,10 @@ class Pi_Monitor:
         self.cleanup()
         sys.exit(0)
 
+    def celsius_to_fahrenheit(self, celsius):
+        """Convert Celsius to Fahrenheit"""
+        return (celsius * 9/5) + 32
+
     def run_monitor_loop(self):
         """Main monitoring loop - single-threaded infinite loop for both OLED display and fan control"""
         last_fan_pwm = 0
@@ -249,6 +256,7 @@ class Pi_Monitor:
         while not self.stop_event.is_set():
             # Fan control logic (runs every iteration - every 1 second)
             current_cpu_temp = self.get_raspberry_cpu_temperature()
+            current_computer_temp = self.get_computer_temperature()
             current_fan_pwm = self.get_raspberry_fan_pwm()
             
             # Use single print statement to reduce I/O
@@ -281,8 +289,12 @@ class Pi_Monitor:
                     self.oled.draw_text(self._format_strings['led_mode'].format(self.get_computer_led_mode()), position=(0, 48), font_size=self.font_size)
                 else:  # oled_screen == 2
                     # Screen 3: Temperature/Fan
-                    self.oled.draw_text(self._format_strings['pi_temp'].format(current_cpu_temp), position=(0, 0), font_size=self.font_size)
-                    self.oled.draw_text(self._format_strings['pc_temp'].format(self.get_computer_temperature()), position=(0, 16), font_size=self.font_size)
+                    if self.convert_to_fahrenheit is False:  # Convert to Celsius
+                        self.oled.draw_text(self._format_strings['pi_temp'].format(current_cpu_temp), position=(0, 0), font_size=self.font_size)
+                        self.oled.draw_text(self._format_strings['pc_temp'].format(current_computer_temp), position=(0, 16), font_size=self.font_size)
+                    else:  # Convert to Fahrenheit
+                        self.oled.draw_text(self._format_strings['pi_temp'].format(self.celsius_to_fahrenheit(current_cpu_temp)), position=(0, 0), font_size=self.font_size)
+                        self.oled.draw_text(self._format_strings['pc_temp'].format(self.celsius_to_fahrenheit(current_computer_temp)), position=(0, 16), font_size=self.font_size)
                     self.oled.draw_text(self._format_strings['fan_mode'].format(self.get_computer_fan_mode()), position=(0, 32), font_size=self.font_size)
                     self.oled.draw_text(self._format_strings['fan_duty'].format(int(float(self.get_computer_fan_duty()/255.0)*100)), position=(0, 48), font_size=self.font_size)
                 
