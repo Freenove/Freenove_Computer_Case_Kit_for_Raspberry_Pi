@@ -35,6 +35,15 @@ By running the following command, you can stop the OLED display and the case fan
 
 .. code-block:: console
     
+    sudo systemctl stop my_app_running.service
+
+.. image:: ../_static/imgs/5_Auto_Start_Setting/Chapter05_04.png
+    :align: center
+
+Run the following command to configure your Raspberry Pi 5 to start the OLED display and the case fans automatically upon boot (use with caution).
+
+.. code-block:: console
+    
     sudo systemctl enable my_app_running.service
 
 .. image:: ../_static/imgs/5_Auto_Start_Setting/Chapter05_02.png
