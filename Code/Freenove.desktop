@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Freenove Computer Case
+Comment=Freenove Computer Case Kit Pro for Raspberry Pi
+Exec=bash /home/pi/Freenove_Computer_Case_Kit_Pro_for_Raspberry_Pi/Code/run_app.sh
+Icon=/home/pi/Freenove_Computer_Case_Kit_Pro_for_Raspberry_Pi/Code/Freenove_Logo.xpm
+Terminal=true
+Categories=Application;Development;
