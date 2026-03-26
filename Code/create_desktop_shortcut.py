@@ -17,11 +17,30 @@ class DesktopShortcutCreator:
         self.comment = comment
         return self
         
+    def _get_original_user_home(self):
+        """Get the original user's home directory when running with sudo"""
+        # Check if running with sudo
+        sudo_user = os.environ.get('SUDO_USER')
+        
+        if sudo_user:
+            # Running with sudo, get the original user's home
+            import pwd
+            try:
+                user_info = pwd.getpwnam(sudo_user)
+                return user_info.pw_dir
+            except KeyError:
+                # Fallback if we can't find the user info
+                print(f"Warning: Could not get home directory for user {sudo_user}, using /home/pi as fallback")
+                return "/home/pi"
+        else:
+            # Not running with sudo, use current user's home
+            return os.path.expanduser("~")
+    
     def _get_desktop_path(self):
         """Get desktop path"""
         try:
-            username = os.getlogin()
-            home_dir = os.path.expanduser(f"~{username}")
+            # Try to get the original user's home directory
+            home_dir = self._get_original_user_home()
         except Exception:
             # If getting username fails, use default pi user
             home_dir = "/home/pi"
@@ -116,6 +135,11 @@ Categories=Application;Development;
             # Validate required files
             run_script_path, icon_path = self._validate_files()
 
+            # Get original user's home directory for the URL
+            original_user_home = self._get_original_user_home()
+            apps_dir = os.path.join(original_user_home, ".local/share/applications")
+            url_path = os.path.join(apps_dir, f"{target_name}.desktop")
+
             # Create desktop file content with Type=Link
             application_content = f"""[Desktop Entry]
 Version=1.0
@@ -123,7 +147,7 @@ Type=Link
 Name={self.name}
 Comment={self.comment}
 Icon={icon_path}
-URL={os.path.join(os.path.expanduser('~/.local/share/applications/'), f'{target_name}.desktop')}
+URL={url_path}
 """
 
             # Destination path on desktop
@@ -196,8 +220,9 @@ URL={os.path.join(os.path.expanduser('~/.local/share/applications/'), f'{target_
             # Create desktop file content
             application_content = self._create_application_content(run_script_path, icon_path)
             
-            # Destination path (in applications folder)
-            dest_dir = os.path.expanduser(f"~/.local/share/applications/")
+            # Get original user's home directory instead of current user when using sudo
+            original_user_home = self._get_original_user_home()
+            dest_dir = os.path.join(original_user_home, ".local/share/applications/")
             dest_path = os.path.join(dest_dir, f"{target_name}.desktop")
             
             # Ensure destination directory exists
@@ -235,8 +260,9 @@ URL={os.path.join(os.path.expanduser('~/.local/share/applications/'), f'{target_
             else:
                 target_name = self.name.replace(' ', '_')
             
-            # Path to the file in applications folder
-            dest_dir = os.path.expanduser(f"~/.local/share/applications/")
+            # Get original user's home directory
+            original_user_home = self._get_original_user_home()
+            dest_dir = os.path.join(original_user_home, ".local/share/applications/")
             dest_path = os.path.join(dest_dir, f"{target_name}.desktop")
             
             # Check if file exists before attempting to remove
