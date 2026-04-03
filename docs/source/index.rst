@@ -33,14 +33,5 @@ This product provides the following online documents.
    :maxdepth: 1
    :caption: FNK0100
 
-   fnk0100/codes/tutorial/Welcome.rst
-   fnk0100/codes/tutorial/Preface.rst
-   fnk0100/codes/tutorial/List.rst
-   fnk0100/codes/tutorial/1_Main_Components_of_the_Computer_Case.rst
-   fnk0100/codes/tutorial/2_Assembly_.rst
-   fnk0100/codes/tutorial/3_Install_Raspberry_Pi_OS.rst
-   fnk0100/codes/tutorial/4_Functionality_Tests_.rst
-   fnk0100/codes/tutorial/5_Auto_Start_Setting.rst
-   fnk0100/codes/tutorial/6_Changing_Resolution.rst
-   fnk0100/codes/tutorial/7_Communication_Protocols_and_Controls.rst
-   fnk0100/codes/tutorial/What_s_next.rst
+   fnk0100/codes/tutorial.rst
+   fnk0100/codes/Install.rst
