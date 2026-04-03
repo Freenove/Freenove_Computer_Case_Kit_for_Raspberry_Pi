@@ -5,6 +5,9 @@ import sys
 import threading
 import time
 from api_json import ConfigManager
+from api_expansion import Expansion
+import atexit
+import signal
 
 class TaskManager:
     """
@@ -24,7 +27,54 @@ class TaskManager:
         self.running_processes = {}  # Store running processes
         self.monitor_thread = None
         self.monitoring = False
+        self.expansion = Expansion()
+        led_config = self.config_manager.get_section('LED')
+        fan_config = self.config_manager.get_section('Fan')
+        self.send_led_mode_to_expansion(led_config['mode'])
+        self.send_fan_mode_to_expansion(fan_config['mode'])
+        
+        atexit.register(self.handle_signal)
+        signal.signal(signal.SIGTERM, self.handle_signal)
+        signal.signal(signal.SIGINT, self.handle_signal)
+
+
+    def send_led_mode_to_expansion(self, led_mode):
+        """Send LED mode to expansion board"""
+        if led_mode == 0:
+            self.expansion.set_led_mode(4)                 
+        elif led_mode == 1:
+            self.expansion.set_led_mode(3)
+        elif led_mode == 2:
+            self.expansion.set_led_mode(2)
+        elif led_mode == 3:
+            self.expansion.set_led_mode(1)
+        elif led_mode == 5:
+            self.expansion.set_led_mode(0)
     
+    def send_fan_mode_to_expansion(self, mode):
+        """Send fan mode to expansion board"""
+        if self.expansion.get_board_type() == "FNK0100":
+            if mode == 0:
+                self.expansion.set_fan_mode(2)  
+            elif mode == 1:
+                self.expansion.set_fan_mode(1)
+            elif mode == 3:
+                self.expansion.set_fan_mode(0)
+        elif self.expansion.get_board_type() == "FNK0107":
+            if mode == 0:
+                self.expansion.set_fan_mode(2)  
+            elif mode == 1:
+                self.expansion.set_fan_mode(3)
+            elif mode == 2:
+                self.expansion.set_fan_mode(1)
+            elif mode == 4:
+                self.expansion.set_fan_mode(0)
+
+    def handle_signal(self, signum=None, frame=None):
+        """Handle signals"""
+        print("Received signal:", signum)
+        self.stop_all_tasks()
+
     def get_enabled_tasks(self):
         """
         Get tasks that are enabled for startup
@@ -272,7 +322,11 @@ class TaskManager:
         # Stop all running tasks
         for task_path in list(self.running_processes.keys()):
             self.stop_task(task_path)
+
+        self.expansion.set_led_mode(0)
+        self.expansion.set_fan_mode(0)
         print("Task monitoring stopped")
+
 
     def set_task_status(self, task_path, is_run_on_startup):
         """
@@ -314,7 +368,7 @@ class TaskManager:
         else:
             print(f"Task {task_path} not found in config")
             return False
-    
+
 
 # Example usage
 if __name__ == "__main__":
