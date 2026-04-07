@@ -281,7 +281,13 @@ URL={url_path}
 
 
 if __name__ == "__main__":
-    creator = DesktopShortcutCreator("FNK0100", "Freenove Computer Case Kit for Raspberry Pi")
+    from api_expansion import Expansion
+    expansion = Expansion()
+    if expansion.get_board_type() == "FNK0100":
+        creator = DesktopShortcutCreator("FNK0100", "Freenove Computer Case Kit for Raspberry Pi")
+    elif expansion.get_board_type() == "FNK0107":
+        creator = DesktopShortcutCreator("FNK0107", "Freenove Computer Case Kit Pro for Raspberry Pi")
+
     #creator.remove_application_from_programming()
     creator.create_application_to_programming()
     #creator.remove_shortcut_from_desktop()
