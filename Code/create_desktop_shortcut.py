@@ -2,6 +2,7 @@ import os
 import sys
 
 class DesktopShortcutCreator:
+    # name must match the filename under picture/xpm/
     def __init__(self, name="FNK0100", comment="Freenove Computer Case Kit for Raspberry Pi"):
         self.name = name
         self.comment = comment
@@ -71,7 +72,7 @@ class DesktopShortcutCreator:
         if not os.path.exists(run_script_path):
             raise FileNotFoundError(f"Script file {run_script_path} does not exist")
 
-        icon_path = os.path.join(self.current_dir, "Freenove_Logo.xpm")
+        icon_path = os.path.join(self.current_dir, "picture/xpm/", f"{self.name}.xpm")
         if not os.path.exists(icon_path):
             raise FileNotFoundError(f"Icon file {icon_path} does not exist")
         
@@ -283,13 +284,15 @@ URL={url_path}
 if __name__ == "__main__":
     from api_expansion import Expansion
     expansion = Expansion()
+    
+    # name must match the filename under picture/xpm/
     if expansion.get_board_type() == "FNK0100":
         creator = DesktopShortcutCreator("FNK0100", "Freenove Computer Case Kit for Raspberry Pi")
     elif expansion.get_board_type() == "FNK0107":
         creator = DesktopShortcutCreator("FNK0107", "Freenove Computer Case Kit Pro for Raspberry Pi")
 
-    #creator.remove_application_from_programming()
+    creator.remove_application_from_programming()
     creator.create_application_to_programming()
-    #creator.remove_shortcut_from_desktop()
+    creator.remove_shortcut_from_desktop()
     creator.create_shortcut_to_desktop()
     sys.exit(0)

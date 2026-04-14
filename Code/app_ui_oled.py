@@ -146,7 +146,7 @@ class OledTab(QWidget):
                 width: 20px;
             }
             QComboBox::down-arrow {
-                image: url(./arrow-down.png);
+                image: url(./picture/arrow-down.png);
             }
             QComboBox QAbstractItemView {
                 text-align: center;
