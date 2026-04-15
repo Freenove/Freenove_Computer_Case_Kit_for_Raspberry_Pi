@@ -1275,7 +1275,11 @@ class MainWindow(QMainWindow):
             self.monitor_update_color_timer_is_running = False
         self.set_led_process(False)
         self.set_fan_process(False)
-        self.set_oled_process(False)
+        if self.setting_service_is_exist and self.oled_process is not None:
+            self.set_oled_process(False)
+            self.setting_oled_task_is_running = True
+            self.config_manager.set_value('OLED', 'is_run_on_startup', self.setting_oled_task_is_running)
+            self.config_manager.save_config()
         os.system('sudo rm __pycache__ -rf')
         event.accept()
     def keyPressEvent(self, event):
