@@ -2,6 +2,7 @@ from api_oled import OLED
 from api_expansion import Expansion
 from api_systemInfo import SystemInformation
 from api_json import ConfigManager
+from power_state import get_power_reading, get_hourly_cost_yen
 import atexit
 import signal
 import time
@@ -20,7 +21,7 @@ class OLED_TASK:
         self.is_convert_case_temp_to_fahrenheit = False
         self.font_size = 12
         self.running = True  # Add flag to control main loop
-        
+
         # Initialize config manager
         self.config_manager = ConfigManager()
         self.screen1_data_format = self.config_manager.get_value('OLED', 'screen1').get('data_format', 0)
@@ -58,7 +59,7 @@ class OLED_TASK:
     def celsius_to_fahrenheit(self, celsius):
         """Convert Celsius to Fahrenheit"""
         return (celsius * 9/5) + 32
-    
+
     def get_computer_temperature(self):
         # Get the computer temperature using Expansion object
         try:
@@ -93,7 +94,7 @@ class OLED_TASK:
                 self.oled.close()
         except Exception as e:
             print(e)
-        
+
         # Set running flag to False to exit main loop
         self.running = False
 
@@ -135,7 +136,7 @@ class OLED_TASK:
         self.oled.draw_rectangle((0, 0, self.oled.width-1, self.oled.height-1), outline="white")
         self.oled.draw_line(((0, 16), (self.oled.width-1, 16)), fill="white")
         self.oled.draw_line(((0, 48), (self.oled.width-1, 48)), fill="white")
-        
+
         # Update configuration
         self.screen1_data_format = self.config_manager.get_value('OLED', 'screen1').get('data_format', 0)
         self.screen1_time_format = self.config_manager.get_value('OLED', 'screen1').get('time_format', 0)
@@ -217,18 +218,18 @@ class OLED_TASK:
             cpu_circle_pos = (21,46)
             mem_circle_pos = (64,46)
             disk_circle_pos = (107,46)
-        
+
         # Draw text labels in specified positions
         self.oled.draw_text("CPU",  position=cpu_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("MEM",  position=mem_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("DISK", position=disk_pos, directory="center", offset=(0, 0), font_size=self.font_size)
-        
+
         # Draw percentage circles in corresponding positions
         self.oled.draw_circle_with_percentage(cpu_circle_pos, 16, cpu_usage, outline="white", fill="white")
         self.oled.draw_circle_with_percentage(mem_circle_pos, 16, memory_usage, outline="white", fill="white")
         self.oled.draw_circle_with_percentage(disk_circle_pos, 16, disk_usage, outline="white", fill="white")
         self.oled.show()
-    
+
     def oled_ui_3_show(self, pi_temperature, cpu_temperature):
         self.oled.clear()
 
@@ -285,10 +286,10 @@ class OLED_TASK:
         self.oled.draw_rectangle((0, 0, self.oled.width-1, self.oled.height-1), outline="white")
         self.oled.draw_line(((43, 0), (43, self.oled.height-1)), fill="white")
         self.oled.draw_line(((86, 0), (86, self.oled.height-1)), fill="white")
-        
+
         # Get screen4 interchange setting
         self.screen4_interchange = self.config_manager.get_value('OLED', 'screen4').get('interchange', 0)
-        
+
         # Define positions based on interchange setting
         if self.screen4_interchange == 1:
             # Order: Pi, C2, C1
@@ -356,23 +357,32 @@ class OLED_TASK:
             pi_percent_pos = ((0,48),(42,64))
             c1_percent_pos = ((43,48),(85,64))
             c2_percent_pos = ((86,48),(128,64))
-        
+
         # Write titles in first row
         self.oled.draw_text("Pi",  position=pi_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("C1",  position=c1_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("C2",  position=c2_pos, directory="center", offset=(0, 0), font_size=self.font_size)
-        
+
         # Draw dials in second row
         percentage_value = [round(duty[i]/255*100) for i in range(3)]
         self.oled.draw_dial(center_xy=pi_dial_pos, radius=16, angle=(225, 315), directory="CW", tick_count=10, percentage=percentage_value[0], start_value=0, end_value=100)
         self.oled.draw_dial(center_xy=c1_dial_pos, radius=16, angle=(225, 315), directory="CW", tick_count=10, percentage=percentage_value[1], start_value=0, end_value=100)
         self.oled.draw_dial(center_xy=c2_dial_pos, radius=16, angle=(225, 315), directory="CW", tick_count=10, percentage=percentage_value[2], start_value=0, end_value=100)
-        
+
         # Print duty cycle percentage values in third row
         self.oled.draw_text("{}%".format(percentage_value[0]), position=pi_percent_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("{}%".format(percentage_value[1]), position=c1_percent_pos, directory="center", offset=(0, 0), font_size=self.font_size)
         self.oled.draw_text("{}%".format(percentage_value[2]), position=c2_percent_pos, directory="center", offset=(0, 0), font_size=self.font_size)
-        
+
+        self.oled.show()
+
+    def oled_ui_5_show(self, power_watts, hourly_cost_yen):
+        """Screen 5: current power draw and estimated hourly cost."""
+        self.oled.clear()
+        power_text = f"{power_watts:.0f}W" if power_watts is not None else "---W"
+        cost_text  = f"\xa5{hourly_cost_yen:.0f}/h" if hourly_cost_yen is not None else "\xa5---/h"
+        self.oled.draw_text(power_text, position=((0, 0), (128, 32)), directory="center", offset=(0, 4), font_size=24)
+        self.oled.draw_text(cost_text,  position=((0, 32), (128, 64)), directory="center", offset=(0, 4), font_size=24)
         self.oled.show()
 
     def run_oled_loop(self):
@@ -380,7 +390,7 @@ class OLED_TASK:
         oled_counter = 0  # Counter to control OLED update frequency
         screen_start_time = time.time()  # Record the start time of current screen
         current_screen = 0  # Current screen index
-        
+
         while self.running:
             # Update data every 0.3 seconds
             current_date = self.system_information.get_raspberry_pi_date()
@@ -397,59 +407,69 @@ class OLED_TASK:
 
             current_pi_duty = self.system_information.get_raspberry_pi_fan_duty()
             computer_fan_duty = self.get_computer_fan_duty()
-            
+
+            power_watts = get_power_reading()
+            hourly_cost_yen = get_hourly_cost_yen(power_watts)
+
             # Get display time configuration for each screen
             screen1_duration = self.config_manager.get_value('OLED', 'screen1').get('display_time', 3.0)
             screen2_duration = self.config_manager.get_value('OLED', 'screen2').get('display_time', 3.0)
             screen3_duration = self.config_manager.get_value('OLED', 'screen3').get('display_time', 3.0)
             screen4_duration = self.config_manager.get_value('OLED', 'screen4').get('display_time', 3.0)
+            screen5_duration = (self.config_manager.get_value('OLED', 'screen5') or {}).get('display_time', 3.0)
 
             screen1_is_run_on_oled = self.config_manager.get_value('OLED', 'screen1').get('is_run_on_oled', True)
             screen2_is_run_on_oled = self.config_manager.get_value('OLED', 'screen2').get('is_run_on_oled', True)
             screen3_is_run_on_oled = self.config_manager.get_value('OLED', 'screen3').get('is_run_on_oled', True)
             screen4_is_run_on_oled = self.config_manager.get_value('OLED', 'screen4').get('is_run_on_oled', True)
+            screen5_is_run_on_oled = (self.config_manager.get_value('OLED', 'screen5') or {}).get('is_run_on_oled', True)
 
             # Determine which screens need to be displayed according to configuration
             active_screens = []
             screen_durations = []
             screen_functions = []
-            
+
             if screen1_is_run_on_oled:
                 active_screens.append(0)
                 screen_durations.append(screen1_duration)
                 screen_functions.append(lambda: self.oled_ui_1_show(current_date, current_weekday, current_time))
-            
+
             if screen2_is_run_on_oled:
                 active_screens.append(1)
                 screen_durations.append(screen2_duration)
                 screen_functions.append(lambda: self.oled_ui_2_show(ip_address, cpu_usage, memory_usage[0], disk_usage[0]))
-            
+
             if screen3_is_run_on_oled:
                 active_screens.append(2)
                 screen_durations.append(screen3_duration)
                 screen_functions.append(lambda: self.oled_ui_3_show(cpu_temperature, computer_temperature))
-            
+
             if screen4_is_run_on_oled:
                 active_screens.append(3)
                 screen_durations.append(screen4_duration)
                 screen_functions.append(lambda: self.oled_ui_4_show([current_pi_duty, computer_fan_duty[0], computer_fan_duty[1]]))
-            
+
+            if screen5_is_run_on_oled:
+                active_screens.append(4)
+                screen_durations.append(screen5_duration)
+                screen_functions.append(lambda: self.oled_ui_5_show(power_watts, hourly_cost_yen))
+
             # Skip if no active screens
             if not active_screens:
                 time.sleep(0.3)
                 continue
-            
+
             # Get the current active screen index
             current_active_index = current_screen % len(active_screens)
             current_screen_index = active_screens[current_active_index]
-            
+
             # Check if screen needs to be switched (based on time instead of counter)
             elapsed_time = time.time() - screen_start_time
             if elapsed_time >= screen_durations[current_active_index]:
                 current_screen = (current_screen + 1) % len(active_screens)
                 current_active_index = current_screen % len(active_screens)
                 screen_start_time = time.time()
-            
+
             # Update OLED every 0.3 seconds
             try:
                 # Use the function of current active screen
