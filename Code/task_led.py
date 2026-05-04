@@ -2,6 +2,8 @@ from api_expansion import Expansion
 from power_state import get_power_reading
 
 import atexit
+import json
+import os
 import signal
 import socket
 import time
@@ -12,6 +14,24 @@ _COLOR_HIGH = (255, 0, 0)     # red at high power
 _LOW_WATTS  = 2000
 _HIGH_WATTS = 4800
 
+# app_config.json LED.mode values (matches app_ui_led.py radio button order)
+_MODE_RAINBOW   = 0
+_MODE_BREATHING = 1
+_MODE_FOLLOW    = 2
+_MODE_MANUAL    = 3  # power-based color (replaces static single color)
+_MODE_CUSTOM    = 4  # same power-based logic (task_led.py custom mode)
+_MODE_CLOSE     = 5
+
+# Hardware set_led_mode() values from api_expansion comment:
+# 0: close, 1: RGB, 2: Following, 3: Breathing, 4: Rainbow
+_HW_CLOSE     = 0
+_HW_RGB       = 1
+_HW_FOLLOWING = 2
+_HW_BREATHING = 3
+_HW_RAINBOW   = 4
+
+_CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app_config.json')
+
 
 def _is_network_connected():
     try:
@@ -20,6 +40,14 @@ def _is_network_connected():
             return s.getsockname()[0] != '0.0.0.0'
     except OSError:
         return False
+
+
+def _read_config():
+    try:
+        with open(_CONFIG_PATH, 'r') as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
 
 def _power_to_color(watts):
@@ -32,6 +60,17 @@ def _power_to_color(watts):
     g = int(_COLOR_LOW[1] + t * (_COLOR_HIGH[1] - _COLOR_LOW[1]))
     b = int(_COLOR_LOW[2] + t * (_COLOR_HIGH[2] - _COLOR_LOW[2]))
     return (r, g, b)
+
+
+def _rainbow_step(pos):
+    pos = pos % 255
+    if pos < 85:
+        return (255 - pos * 3, pos * 3, 0)
+    if pos < 170:
+        pos -= 85
+        return (0, 255 - pos * 3, pos * 3)
+    pos -= 170
+    return (pos * 3, 0, 255 - pos * 3)
 
 
 class LED_TASK:
@@ -52,7 +91,7 @@ class LED_TASK:
     def handle_signal(self, signum=None, frame=None):
         try:
             if self.expansion:
-                self.expansion.set_led_mode(0)
+                self.expansion.set_led_mode(_HW_CLOSE)
         except Exception as e:
             print(e)
         try:
@@ -65,37 +104,103 @@ class LED_TASK:
                 self.expansion.end()
         except Exception as e:
             print(e)
-
         self.running = False
 
     def run_led_loop(self):
-        """Power-based dynamic LED color: water-blue (low) to red (high), blinks red when offline."""
-        self.expansion.set_led_mode(1)  # Static RGB mode
-        r, g, b = _COLOR_LOW
-        self.expansion.set_all_led_color(r, g, b)
+        """Main loop: reads LED.mode from app_config.json every 3 s and dispatches accordingly.
 
-        tick = 0
+        mode 0 (Rainbow)  → software rainbow wheel (original show_wheel_color behavior)
+        mode 1 (Breathing)→ hardware breathing with configured color
+        mode 2 (Follow)   → hardware following with configured color
+        mode 3 (Manual)   → power-based dynamic color (custom: water-blue→red by wattage)
+        mode 4 (Custom)   → same power-based logic as mode 3
+        mode 5 (Close)    → LEDs off
+        """
+        config = _read_config()
+        last_config_read = time.monotonic()
+
+        # power-mode state
         blink_on = False
         online = True
+        power_r, power_g, power_b = _COLOR_LOW
+        last_power_check = 0.0
+
+        # rainbow state
+        rainbow_pos = 0
+
+        # track hardware mode to avoid redundant set_led_mode calls
+        hw_mode = None
+
         try:
             while self.running:
-                # Every 3 seconds (6 ticks × 0.5 s): refresh network status and power color
-                if tick % 6 == 0:
-                    online = _is_network_connected()
-                    if online:
-                        watts = get_power_reading()
-                        r, g, b = _power_to_color(watts)
-                        blink_on = False
+                now = time.monotonic()
+
+                if now - last_config_read >= 3.0:
+                    config = _read_config()
+                    last_config_read = now
+
+                led_cfg = config.get('LED', {})
+                mode = led_cfg.get('mode', _MODE_MANUAL)
+
+                if mode == _MODE_RAINBOW:
+                    r, g, b = _rainbow_step(rainbow_pos)
+                    if hw_mode != _HW_RGB:
+                        self.expansion.set_led_mode(_HW_RGB)
+                        hw_mode = _HW_RGB
+                    self.expansion.set_all_led_color(r, g, b)
+                    rainbow_pos = (rainbow_pos + 1) % 255
+                    time.sleep(0.05)
+
+                elif mode == _MODE_BREATHING:
+                    r = led_cfg.get('red_value', 0)
+                    g = led_cfg.get('green_value', 0)
+                    b = led_cfg.get('blue_value', 255)
+                    if hw_mode != _HW_BREATHING:
+                        self.expansion.set_led_mode(_HW_BREATHING)
                         self.expansion.set_all_led_color(r, g, b)
+                        hw_mode = _HW_BREATHING
+                    time.sleep(0.5)
 
-                # Every 0.5 s: toggle blink when offline
-                if not online:
-                    blink_on = not blink_on
-                    br, bg, bb = (255, 0, 0) if blink_on else (0, 0, 0)
-                    self.expansion.set_all_led_color(br, bg, bb)
+                elif mode == _MODE_FOLLOW:
+                    r = led_cfg.get('red_value', 0)
+                    g = led_cfg.get('green_value', 0)
+                    b = led_cfg.get('blue_value', 255)
+                    if hw_mode != _HW_FOLLOWING:
+                        self.expansion.set_led_mode(_HW_FOLLOWING)
+                        self.expansion.set_all_led_color(r, g, b)
+                        hw_mode = _HW_FOLLOWING
+                    time.sleep(0.5)
 
-                tick += 1
-                time.sleep(0.5)
+                elif mode in (_MODE_MANUAL, _MODE_CUSTOM):
+                    if hw_mode != _HW_RGB:
+                        self.expansion.set_led_mode(_HW_RGB)
+                        hw_mode = _HW_RGB
+
+                    if now - last_power_check >= 3.0:
+                        last_power_check = now
+                        online = _is_network_connected()
+                        if online:
+                            watts = get_power_reading()
+                            power_r, power_g, power_b = _power_to_color(watts)
+                            blink_on = False
+                            self.expansion.set_all_led_color(power_r, power_g, power_b)
+
+                    if not online:
+                        blink_on = not blink_on
+                        br, bg, bb = (255, 0, 0) if blink_on else (0, 0, 0)
+                        self.expansion.set_all_led_color(br, bg, bb)
+
+                    time.sleep(0.5)
+
+                elif mode == _MODE_CLOSE:
+                    if hw_mode != _HW_CLOSE:
+                        self.expansion.set_led_mode(_HW_CLOSE)
+                        hw_mode = _HW_CLOSE
+                    time.sleep(0.5)
+
+                else:
+                    time.sleep(0.5)
+
         except KeyboardInterrupt:
             pass
 
