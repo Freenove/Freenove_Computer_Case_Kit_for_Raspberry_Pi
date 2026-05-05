@@ -99,20 +99,29 @@ class FAN_TASK:
         middle_speed   = cfg['middle_speed']
         high_speed     = cfg['high_speed']
 
-        current_speed = low_speed
+        current_speed = 0  # Start in STOPPED state
         self._set_fan_duty(current_speed)
 
         try:
             while self.running:
                 temp = max(self._get_cpu_temp(), self._get_case_temp())
 
-                if temp >= high_threshold:
-                    current_speed = high_speed
-                elif temp >= low_threshold:
-                    current_speed = middle_speed
-                elif temp < low_threshold - schmitt:
-                    current_speed = low_speed
-                # else: stay in hysteresis band — keep current_speed unchanged
+                if current_speed == high_speed:
+                    if temp < high_threshold:
+                        current_speed = middle_speed
+                elif current_speed == middle_speed:
+                    if temp >= high_threshold:
+                        current_speed = high_speed
+                    elif temp < low_threshold:
+                        current_speed = low_speed
+                elif current_speed == low_speed:
+                    if temp >= low_threshold:
+                        current_speed = middle_speed
+                    elif temp < low_threshold - schmitt:
+                        current_speed = 0
+                else:  # STOPPED (0)
+                    if temp >= low_threshold:
+                        current_speed = middle_speed  # skip LOW on heating
 
                 self._set_fan_duty(current_speed)
                 time.sleep(5)
