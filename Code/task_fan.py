@@ -1,4 +1,6 @@
 from api_expansion import Expansion
+from api_systemInfo import SystemInformation
+from api_json import ConfigManager
 import atexit
 import signal
 import time
@@ -8,12 +10,18 @@ class FAN_TASK:
 
     def __init__(self):
         self.expansion = None
+        self.system_info = None
         self.board_type = None
-        self.running = True  # Add flag to control main loop
+        self.running = True
 
         try:
-            self.expansion = Expansion()                            # Initialize Expansion object
+            self.expansion = Expansion()
             self.board_type = self.expansion.get_board_type()
+        except Exception as e:
+            sys.exit(1)
+
+        try:
+            self.system_info = SystemInformation()
         except Exception as e:
             sys.exit(1)
 
@@ -40,52 +48,79 @@ class FAN_TASK:
                 self.expansion.end()
         except Exception as e:
             print(e)
-        
-        # Set running flag to False to exit main loop
+
         self.running = False
-        
-        # Only exit if called from signal handler (not from atexit)
+
         if signum is not None:
             pass
 
-    def run_fan_loop(self):
-        """Main monitoring loop - single-threaded infinite loop for both OLED display and fan control"""
-        self.expansion.set_fan_mode(1)
-        self.expansion.set_fan_frequency(50000) 
+    def _load_fan_config(self):
+        config = ConfigManager()
+        fan_cfg = config.get_section('Fan')
+        return {
+            'low_threshold':  fan_cfg.get('mode2_low_temp_threshold', 30),
+            'high_threshold': fan_cfg.get('mode2_high_temp_threshold', 50),
+            'schmitt':        fan_cfg.get('mode2_temp_schmitt', 3),
+            'low_speed':      fan_cfg.get('mode2_low_speed', 75),
+            'middle_speed':   fan_cfg.get('mode2_middle_speed', 125),
+            'high_speed':     fan_cfg.get('mode2_high_speed', 175),
+        }
+
+    def _get_cpu_temp(self):
+        try:
+            return self.system_info.get_raspberry_pi_cpu_temperature()
+        except Exception:
+            return 0.0
+
+    def _get_case_temp(self):
+        try:
+            return self.expansion.get_temp()
+        except Exception:
+            return 0.0
+
+    def _set_fan_duty(self, duty):
         if self.board_type == "FNK0100":
-            self.expansion.set_fan_temp_mode_threshold(50, 100)
+            self.expansion.set_fan_duty(duty, duty)
         elif self.board_type == "FNK0107":
-            self.expansion.set_fan_temp_mode_threshold(50, 100, 3)
-            self.expansion.set_fan_temp_mode_speed(75, 125, 175)
-            self.expansion.set_fan_pi_following(0, 100)
+            self.expansion.set_fan_duty(duty, duty, duty)
+
+    def run_fan_loop(self):
+        """Follow Case: software Schmitt-trigger control using max(cpu_temp, case_temp)."""
+        self.expansion.set_fan_mode(1)   # Manual — duty set by this loop
+        self.expansion.set_fan_frequency(50000)
+        if self.board_type == "FNK0107":
             self.expansion.set_fan_power_switch(1)
+
+        cfg = self._load_fan_config()
+        low_threshold  = cfg['low_threshold']
+        high_threshold = cfg['high_threshold']
+        schmitt        = cfg['schmitt']
+        low_speed      = cfg['low_speed']
+        middle_speed   = cfg['middle_speed']
+        high_speed     = cfg['high_speed']
+
+        current_speed = low_speed
+        self._set_fan_duty(current_speed)
 
         try:
             while self.running:
-                for i in range(0,255,1):
-                    if not self.running:
-                        break
-                    if self.board_type == "FNK0100":
-                        self.expansion.set_fan_duty(i, i)
-                    elif self.board_type == "FNK0107":
-                        self.expansion.set_fan_duty(i, i, i)
-                    time.sleep(0.01)
-                if not self.running:
-                    break
-                for i in range(255,0,-1):
-                    if not self.running:
-                        break
-                    if self.board_type == "FNK0100":
-                        self.expansion.set_fan_duty(i, i)
-                    elif self.board_type == "FNK0107":
-                        self.expansion.set_fan_duty(i, i, i)
-                    time.sleep(0.01)
+                temp = max(self._get_cpu_temp(), self._get_case_temp())
+
+                if temp >= high_threshold:
+                    current_speed = high_speed
+                elif temp >= low_threshold:
+                    current_speed = middle_speed
+                elif temp < low_threshold - schmitt:
+                    current_speed = low_speed
+                # else: stay in hysteresis band — keep current_speed unchanged
+
+                self._set_fan_duty(current_speed)
+                time.sleep(5)
         except KeyboardInterrupt:
-            # This will be caught by the signal handlers
             pass
 
 if __name__ == "__main__":
-    fan_task= None
+    fan_task = None
     try:
         fan_task = FAN_TASK()
         fan_task.run_fan_loop()
