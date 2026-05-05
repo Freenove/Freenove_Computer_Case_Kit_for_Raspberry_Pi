@@ -1,0 +1,58 @@
+{
+  "Monitor": {
+    "screen_orientation": 0,
+    "follow_led_color": 0
+  },
+  "LED": {
+    "mode": 3,
+    "red_value": 0,
+    "green_value": 206,
+    "blue_value": 209,
+    "task_name": "task_led.py",
+    "is_run_on_startup": true
+  },
+  "Fan": {
+    "mode": 0,
+    "task_name": "task_fan.py",
+    "is_run_on_startup": true,
+    "mode1_fan_group1": 75,
+    "mode1_fan_group2": 75,
+    "mode2_low_temp_threshold": 30,
+    "mode2_high_temp_threshold": 50
+  },
+  "OLED": {
+    "task_name": "task_oled.py",
+    "is_run_on_startup": true,
+    "screen1": {
+      "data_format": 0,
+      "time_format": 0,
+      "display_time": 3.0,
+      "is_run_on_oled": true
+    },
+    "screen2": {
+      "interchange": 0,
+      "display_time": 3.0,
+      "is_run_on_oled": true
+    },
+    "screen3": {
+      "interchange": 0,
+      "display_time": 3.0,
+      "cpu_temp_celsius_or_fahrenheit": false,
+      "case_temp_celsius_or_fahrenheit": false,
+      "is_run_on_oled": true
+    },
+    "screen4": {
+      "interchange": 0,
+      "display_time": 3.0,
+      "is_run_on_oled": true
+    },
+    "screen5": {
+      "display_time": 3.0,
+      "is_run_on_oled": true
+    }
+  },
+  "Service": {
+    "is_exist_on_rpi": false,
+    "is_run_on_startup": false
+  }
+}
