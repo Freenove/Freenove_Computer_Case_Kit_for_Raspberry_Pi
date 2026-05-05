@@ -80,7 +80,8 @@ class FNK0100:
 
     # 获取温度方法
     def get_temp(self):
-        return self.i2c.read(self.REG_TEMP_READ) / 10
+        raw = self.i2c.read(self.REG_TEMP_READ, 2)
+        return ((raw[0] << 8) | raw[1]) / 1000.0
 
     # 风扇控制方法
     def set_fan_mode(self, mode):
@@ -168,7 +169,8 @@ class FNK0107:
 
     # 获取温度方法
     def get_temp(self):
-        return self.i2c.read(self.REG_TEMP_READ) / 10
+        raw = self.i2c.read(self.REG_TEMP_READ, 2)
+        return (raw[0] | (raw[1] << 8)) / 1000.0
 
     # 风扇控制方法
     def set_fan_mode(self, mode):
