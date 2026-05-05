@@ -78,10 +78,9 @@ class FNK0100:
     def set_power_on_check(self, state):
         self.i2c.write(self.REG_POWER_ON_CHECK, state)
 
-    # 获取温度方法 — 16-bit big-endian millidegrees → degrees Celsius
+    # 获取温度方法
     def get_temp(self):
-        raw = self.i2c.read(self.REG_TEMP_READ, 2)
-        return ((raw[0] << 8) | raw[1]) / 1000.0
+        return self.i2c.read(self.REG_TEMP_READ) / 10
 
     # 风扇控制方法
     def set_fan_mode(self, mode):
@@ -167,10 +166,9 @@ class FNK0107:
     def set_power_on_check(self, state):
         self.i2c.write(self.REG_POWER_ON_CHECK, state)
 
-    # 获取温度方法 — 16-bit little-endian millidegrees → degrees Celsius
+    # 获取温度方法
     def get_temp(self):
-        raw = self.i2c.read(self.REG_TEMP_READ, 2)
-        return (raw[0] | (raw[1] << 8)) / 1000.0
+        return self.i2c.read(self.REG_TEMP_READ) / 10
 
     # 风扇控制方法
     def set_fan_mode(self, mode):
