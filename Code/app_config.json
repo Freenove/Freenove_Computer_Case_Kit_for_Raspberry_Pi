@@ -33,28 +33,28 @@
     "screen1": {
       "data_format": 0,
       "time_format": 0,
-      "display_time": 2.0,
+      "display_time": 6.0,
       "is_run_on_oled": true
     },
     "screen2": {
       "interchange": 0,
-      "display_time": 2.0,
+      "display_time": 6.0,
       "is_run_on_oled": true
     },
     "screen3": {
       "interchange": 0,
-      "display_time": 2.0,
+      "display_time": 6.0,
       "cpu_temp_celsius_or_fahrenheit": false,
       "case_temp_celsius_or_fahrenheit": false,
       "is_run_on_oled": true
     },
     "screen4": {
       "interchange": 0,
-      "display_time": 2.0,
+      "display_time": 6.0,
       "is_run_on_oled": true
     },
     "screen5": {
-      "display_time": 3.0,
+      "display_time": 6.0,
       "is_run_on_oled": true
     }
   },
