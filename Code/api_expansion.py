@@ -60,7 +60,7 @@ class FNK0100:
     REG_FAN_DUTY          = 0x06
     REG_FAN_THRESHOLD     = 0x07
     REG_POWER_ON_CHECK    = 0x08
-    
+
     REG_LED_SPECIFIED_READ = 0xf4
     REG_LED_ALL_READ      = 0xf5
     REG_LED_MODE_READ     = 0xf6
@@ -70,17 +70,18 @@ class FNK0100:
     REG_FAN1_DUTY_READ    = 0xfa
     REG_FAN_THRESHOLD_READ = 0xfb
     REG_TEMP_READ         = 0xfc
-    
+
     def __init__(self, i2c_controller):
         self.i2c = i2c_controller
-    
+
     # 设置开机检查
     def set_power_on_check(self, state):
         self.i2c.write(self.REG_POWER_ON_CHECK, state)
 
-    # 获取温度方法
+    # 获取温度方法 — 16-bit big-endian millidegrees → degrees Celsius
     def get_temp(self):
-        return self.i2c.read(self.REG_TEMP_READ)
+        raw = self.i2c.read(self.REG_TEMP_READ, 2)
+        return ((raw[0] << 8) | raw[1]) / 1000.0
 
     # 风扇控制方法
     def set_fan_mode(self, mode):
@@ -166,9 +167,10 @@ class FNK0107:
     def set_power_on_check(self, state):
         self.i2c.write(self.REG_POWER_ON_CHECK, state)
 
-    # 获取温度方法
+    # 获取温度方法 — 16-bit little-endian millidegrees → degrees Celsius
     def get_temp(self):
-        return self.i2c.read(self.REG_TEMP_READ)
+        raw = self.i2c.read(self.REG_TEMP_READ, 2)
+        return (raw[0] | (raw[1] << 8)) / 1000.0
 
     # 风扇控制方法
     def set_fan_mode(self, mode):

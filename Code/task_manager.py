@@ -53,16 +53,32 @@ class TaskManager:
     
     def send_fan_mode_to_expansion(self, mode):
         """Send fan mode to expansion board"""
-        if self.expansion.get_board_type() == "FNK0100":
+        fan_config = self.config_manager.get_section('Fan')
+        board = self.expansion.get_board_type()
+        if board == "FNK0100":
             if mode == 0:
-                self.expansion.set_fan_mode(2)  
+                low  = fan_config.get('mode2_low_temp_threshold', 30)
+                high = fan_config.get('mode2_high_temp_threshold', 50)
+                self.expansion.set_fan_frequency(50000)
+                self.expansion.set_fan_temp_mode_threshold(low, high)
+                self.expansion.set_fan_mode(2)
             elif mode == 1:
                 self.expansion.set_fan_mode(1)
             elif mode == 3:
                 self.expansion.set_fan_mode(0)
-        elif self.expansion.get_board_type() == "FNK0107":
+        elif board == "FNK0107":
             if mode == 0:
-                self.expansion.set_fan_mode(2)  
+                low    = fan_config.get('mode2_low_temp_threshold', 30)
+                high   = fan_config.get('mode2_high_temp_threshold', 50)
+                schmitt = fan_config.get('mode2_temp_schmitt', 3)
+                low_spd = fan_config.get('mode2_low_speed', 75)
+                mid_spd = fan_config.get('mode2_middle_speed', 125)
+                hi_spd  = fan_config.get('mode2_high_speed', 175)
+                self.expansion.set_fan_frequency(50000)
+                self.expansion.set_fan_temp_mode_threshold(low, high, schmitt)
+                self.expansion.set_fan_temp_mode_speed(low_spd, mid_spd, hi_spd)
+                self.expansion.set_fan_power_switch(1)
+                self.expansion.set_fan_mode(2)
             elif mode == 1:
                 self.expansion.set_fan_mode(3)
             elif mode == 2:
