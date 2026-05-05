@@ -4,21 +4,28 @@
     "follow_led_color": 0
   },
   "LED": {
-    "mode": 3,
+    "mode": 0,
     "red_value": 0,
-    "green_value": 206,
-    "blue_value": 209,
+    "green_value": 0,
+    "blue_value": 255,
     "task_name": "task_led.py",
     "is_run_on_startup": true
   },
   "Fan": {
     "mode": 0,
     "task_name": "task_fan.py",
-    "is_run_on_startup": true,
+    "is_run_on_startup": false,
     "mode1_fan_group1": 75,
     "mode1_fan_group2": 75,
     "mode2_low_temp_threshold": 30,
-    "mode2_high_temp_threshold": 50
+    "mode2_high_temp_threshold": 50,
+    "mode1_fan_group3": 75,
+    "mode2_temp_schmitt": 3,
+    "mode2_low_speed": 75,
+    "mode2_middle_speed": 125,
+    "mode2_high_speed": 175,
+    "mode3_min_speed_mapping": 0,
+    "mode3_max_speed_mapping": 255
   },
   "OLED": {
     "task_name": "task_oled.py",
@@ -26,24 +33,24 @@
     "screen1": {
       "data_format": 0,
       "time_format": 0,
-      "display_time": 3.0,
+      "display_time": 2.0,
       "is_run_on_oled": true
     },
     "screen2": {
       "interchange": 0,
-      "display_time": 3.0,
+      "display_time": 2.0,
       "is_run_on_oled": true
     },
     "screen3": {
       "interchange": 0,
-      "display_time": 3.0,
+      "display_time": 2.0,
       "cpu_temp_celsius_or_fahrenheit": false,
       "case_temp_celsius_or_fahrenheit": false,
       "is_run_on_oled": true
     },
     "screen4": {
       "interchange": 0,
-      "display_time": 3.0,
+      "display_time": 2.0,
       "is_run_on_oled": true
     },
     "screen5": {
@@ -52,7 +59,7 @@
     }
   },
   "Service": {
-    "is_exist_on_rpi": false,
-    "is_run_on_startup": false
+    "is_exist_on_rpi": true,
+    "is_run_on_startup": true
   }
 }
