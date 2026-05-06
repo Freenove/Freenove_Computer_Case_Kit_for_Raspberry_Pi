@@ -3,6 +3,7 @@ from power_state import get_power_reading
 
 import atexit
 import json
+import math
 import os
 import signal
 import socket
@@ -11,8 +12,8 @@ import sys
 
 _COLOR_LOW  = (0, 206, 209)   # water blue at low power
 _COLOR_HIGH = (255, 0, 0)     # red at high power
-_LOW_WATTS  = 2000
-_HIGH_WATTS = 4800
+_LOW_WATTS  = 500
+_HIGH_WATTS = 5000
 
 # app_config.json LED.mode values (matches app_ui_led.py radio button order)
 _MODE_RAINBOW   = 0
@@ -55,7 +56,8 @@ def _power_to_color(watts):
         return _COLOR_LOW
     if watts >= _HIGH_WATTS:
         return _COLOR_HIGH
-    t = (watts - _LOW_WATTS) / (_HIGH_WATTS - _LOW_WATTS)
+    t = (math.log(watts) - math.log(_LOW_WATTS)) / (math.log(_HIGH_WATTS) - math.log(_LOW_WATTS))
+    t = max(0.0, min(1.0, t))
     r = int(_COLOR_LOW[0] + t * (_COLOR_HIGH[0] - _COLOR_LOW[0]))
     g = int(_COLOR_LOW[1] + t * (_COLOR_HIGH[1] - _COLOR_LOW[1]))
     b = int(_COLOR_LOW[2] + t * (_COLOR_HIGH[2] - _COLOR_LOW[2]))
