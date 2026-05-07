@@ -624,12 +624,14 @@ class MainWindow(QMainWindow):
         """Send fan mode to expansion board"""
         if self.expansion.get_board_type() == "FNK0100":
             if mode == 0:
-                self.expansion.set_fan_mode(2)  
+                self.expansion.set_fan_frequency(50)
+                self.expansion.set_fan_mode(2)
                 self.expansion.set_fan_temp_mode_threshold(
                     self.fan_temp_mode_threshold[0],
                     self.fan_temp_mode_threshold[1]
                 )
             elif mode == 1:
+                self.expansion.set_fan_frequency(50)
                 self.expansion.set_fan_mode(1)
                 self.expansion.set_fan_duty(
                     self.fan_manual_mode_duty[0],
@@ -640,7 +642,9 @@ class MainWindow(QMainWindow):
                 self.expansion.set_fan_duty(0, 0)
         elif self.expansion.get_board_type() == "FNK0107":
             if mode == 0:
-                self.expansion.set_fan_mode(2)  
+                self.expansion.set_fan_frequency(50000)
+                self.expansion.set_fan_power_switch(1)
+                self.expansion.set_fan_mode(2)
                 self.expansion.set_fan_temp_mode_threshold(
                     self.fan_temp_mode_threshold[0],
                     self.fan_temp_mode_threshold[1],
@@ -652,12 +656,16 @@ class MainWindow(QMainWindow):
                     self.fan_temp_mode_duty[2]
                 )
             elif mode == 1:
+                self.expansion.set_fan_frequency(50000)
+                self.expansion.set_fan_power_switch(1)
                 self.expansion.set_fan_mode(3)
                 self.expansion.set_fan_pi_following(
                     self.fan_pi_follows_duty_map[0],
                     self.fan_pi_follows_duty_map[1]
                 )
             elif mode == 2:
+                self.expansion.set_fan_frequency(50000)
+                self.expansion.set_fan_power_switch(1)
                 self.expansion.set_fan_mode(1)
                 self.expansion.set_fan_duty(
                     self.fan_manual_mode_duty[0],
@@ -666,6 +674,7 @@ class MainWindow(QMainWindow):
                 )
             elif mode == 4:
                 self.expansion.set_fan_mode(0)
+                self.expansion.set_fan_power_switch(0)
                 self.expansion.set_fan_duty(0, 0, 0)
     def fan_radio_clicked_event(self):
         """Handle FAN mode switch event"""
