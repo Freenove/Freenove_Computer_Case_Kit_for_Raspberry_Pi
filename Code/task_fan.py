@@ -87,7 +87,7 @@ class FAN_TASK:
     def run_fan_loop(self):
         """Follow Case: software Schmitt-trigger control using max(cpu_temp, case_temp)."""
         self.expansion.set_fan_mode(1)   # Manual — duty set by this loop
-        self.expansion.set_fan_frequency(50000)
+        self.expansion.set_fan_frequency(50)
         if self.board_type == "FNK0107":
             self.expansion.set_fan_power_switch(1)
 
