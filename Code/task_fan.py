@@ -86,7 +86,36 @@ class FAN_TASK:
 
     def run_fan_loop(self):
         """Follow Case: software Schmitt-trigger control using max(cpu_temp, case_temp)."""
-        self.expansion.set_fan_mode(1)   # Manual — duty set by this loop
+        # --- 起動後5分間: 旧test.pyの --fan テストと完全に同じロジック ---
+        # set_fan_mode(1), set_fan_frequency(50), duty 0→255→0スイープ (0.02秒/ステップ)
+        DEBUG_DURATION = 5 * 60
+        debug_start = time.time()
+
+        self.expansion.set_fan_mode(1)
+        self.expansion.set_fan_frequency(50)
+        if self.board_type == "FNK0107":
+            self.expansion.set_fan_power_switch(1)
+
+        try:
+            while self.running and (time.time() - debug_start) < DEBUG_DURATION:
+                for i in range(0, 256):
+                    if not self.running or (time.time() - debug_start) >= DEBUG_DURATION:
+                        break
+                    self._set_fan_duty(i)
+                    time.sleep(0.02)
+                for i in range(255, -1, -1):
+                    if not self.running or (time.time() - debug_start) >= DEBUG_DURATION:
+                        break
+                    self._set_fan_duty(i)
+                    time.sleep(0.02)
+        except KeyboardInterrupt:
+            return
+
+        if not self.running:
+            return
+
+        # --- 5分経過後: 通常のFollow Case制御に移行 ---
+        self.expansion.set_fan_mode(1)
         if self.board_type == "FNK0107":
             self.expansion.set_fan_frequency(50000)
             self.expansion.set_fan_power_switch(1)
