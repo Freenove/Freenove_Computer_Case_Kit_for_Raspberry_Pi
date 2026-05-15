@@ -87,7 +87,7 @@ Name={self.name}
 Comment={self.comment}
 Exec=bash {run_script_path}
 Icon={icon_path}
-Terminal=false
+Terminal=true
 Categories=Application;Development;
 """
     
