@@ -117,7 +117,10 @@ In the pop-up Control Centre window, select "**Taskbar**" from the left pane. Fi
 Software Packages Update
 ============================================
 
-Run the following command on the terminal to update your Raspberry Pi's package list to the latest version.
+Run the following command on the terminal to update your Raspberry Pi's package list to the latest version. 
+
+In the latest Raspberry Pi 13 (Trixie), passwordless sudo is officially disabled. You will need to enter your user password every time you run a sudo command. Please enter your user password when prompted. (Note: The default password is "**raspberry**", please replace it with your user password.)
+
 
 .. code-block:: console
     
@@ -199,6 +202,16 @@ Run the following two commands one by one in the Raspberry Pi terminal to create
 
 :combo:`red font-bolder:Should you wish to modify the code, please ensure you back it up first to avoid potential software malfunctions caused by unintended changes.`
 
+The icon above corresponds to the command shown below.
+
+.. code-block:: console
+    
+    cd Freenove_Computer_Case_Kit_for_Raspberry_Pi
+    python app_ui.py
+
+.. image:: ../_static/imgs/3_APP_Control/Chapter03_90.png
+    :align: center
+
 3.2 About the Case Control Software
 ********************************************
 
@@ -211,10 +224,19 @@ Double click the software with Freenove logo on RPi's desktop, and a window will
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_17.png
     :align: center
 
-The software interface is as shown below.
+Since passwordless sudo is disabled in Trixie, you will also be asked for your password again after reboot. Enter your user password in the pop-up terminal window.
 
-.. image:: ../_static/imgs/3_APP_Control/Chapter03_18.png
+.. image:: ../_static/imgs/3_APP_Control/Chapter03_92.png
     :align: center
+
+The software interface is shown below. The left window is the main software interface, and the right window displays debugging information.
+
+.. image:: ../_static/imgs/3_APP_Control/Chapter03_93.png
+    :align: center
+
+:combo:`red font-bolder:If you are interested in the code implementation, you can explore the files in the Freenove_Computer_Case_Kit_for_Raspberry_Pi/Code directory.`
+
+:combo:`red font-bolder:Should you wish to modify the code, please ensure you back it up first to avoid potential software malfunctions caused by unintended changes.`
 
 3.2.1 Dashboard Monitoring
 ====================================
@@ -267,7 +289,7 @@ It is set to rainbow mode by default, as shown below.
 
 There are four preset lighting modes available: **Rainbow**、 **Breathing**、 **Follow**、 **Manual**. You can select the corresponding option to switch among the modes.
 
-Note: Only in **Breathing**, **Follow**, and **Manual** modes can the color of the RGB lights be controlled using the slider below. In other modes, the color of the RGB lights cannot be adjusted. 
+Note: Only in **Breathing**, **Follow**, and **Manual** modes can the color of the RGB lights be controlled using the slider below. In other modes, the color of the RGB lights cannot be adjusted.
 
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_22.png
     :align: center
@@ -568,12 +590,10 @@ This interface integrates advanced customization features, allowing you to edit 
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_72.png
     :align: center
 
-Enable Terminal Display (For Debugging)
------------------------------------------------
+Disable Terminal Display & Disable sudo Password
+--------------------------------------------------
 
-Before getting started, we can configure a desktop shortcut to run the software with a visible terminal window. This will allow you to view debug messages and other code output.
-
-Steps:
+If you do not need to view the debugging information and want to close the command terminal window, follow the steps below.
 
 Open the terminal on your Raspberry Pi.
 
@@ -597,30 +617,23 @@ To revert to the default permissions, run the following command:
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_74.png
     :align: center
 
-After modifying the permissions for Freenove.desktop, please follow these steps:
-
 1. Close the current upper-computer software completely.
 
 2. Double-click the Freenove software on the desktop to restart the application.
 
-3. In the pop-up window, click Open to launch the software.
+3. In the pop-up window, click **Open** to launch the software.
 
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_75.png
     :align: center
 
-Change the parameter of **Terminal** from false to **ture**, save and clost the file.
+Change the parameter of **Terminal** from true to **false**, save and clost the file. Restart the software - the command terminal window will no longer open.
 
 .. image:: ../_static/imgs/3_APP_Control/Chapter03_76.png
     :align: center
 
-Double click Freenove software on the desktop, click "**Execute**" upon the pop-up window to launch it
+However, with the command terminal closed, you will have nowhere to enter your password when sudo is needed (because passwordless sudo is disabled by default in Trixie). To allow the software to run properly, you must enable passwordless sudo. To do this, open a terminal and run "**sudo raspi-config**", then select: “1 System Options” -> “S10 Admin Password” -> “No” -> “OK”.
 
-.. image:: ../_static/imgs/3_APP_Control/Chapter03_77.png
-    :align: center
-
-When you open the Freenove software control interface, a command terminal will automatically launch alongside it. All debug information and program logs will be displayed in this terminal window.
-
-.. image:: ../_static/imgs/3_APP_Control/Chapter03_78.png
+.. image:: ../_static/imgs/3_APP_Control/Chapter03_94.png
     :align: center
 
 Interface Configuration
